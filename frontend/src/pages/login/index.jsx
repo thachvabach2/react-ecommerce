@@ -24,7 +24,7 @@ const LoginPage = () => {
                             <Form.Item
                                 labelCol={{ span: 24 }}
                                 label="Email"
-                                name="email"
+                                name="username"
                                 rules={[{ required: true, message: 'Email không được để trống!' }]}
                             >
                                 <Input />
@@ -40,7 +40,7 @@ const LoginPage = () => {
                             </Form.Item>
 
                             <Form.Item>
-                                <Button type="primary" htmlType="submit" loading={false}>
+                                <Button type="primary" htmlType="submit" loading={true}>
                                     Đăng nhập
                                 </Button>
                             </Form.Item>

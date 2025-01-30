@@ -1,14 +1,32 @@
-import { Button, Divider, Form, Input } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Divider, Form, Input, message, notification } from 'antd';
+import { Link, redirect, useNavigate } from 'react-router-dom';
+import { postRegister } from '../../services/api';
 import './register.scss'
+import { useState } from 'react';
+
 
 const RegisterPage = () => {
+    const navigate = useNavigate();
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
-    };
+    const [isSubmit, setIsSubmit] = useState(false);
 
-
+    const onFinish = async (values) => {
+        const { fullName, email, password, phone } = values;
+        setIsSubmit(true);
+        const res = await postRegister(fullName, email, password, phone);
+        setIsSubmit(false);
+        if (res?.data?._id) {
+            message.success('Đăng ký tài khoản thành công!');
+            navigate('/login');
+        } else {
+            console.log('>>> check res: ', res)
+            notification.error({
+                message: 'Có lỗi xảy ra',
+                description: Array.isArray(res.message) ? res.message[0] : res.message,
+                duration: 5,
+            })
+        }
+    }
 
     return (
         <div className='register-page'>
@@ -64,7 +82,7 @@ const RegisterPage = () => {
                             <Form.Item
                             // wrapperCol={{ offset: 6, span: 16 }}
                             >
-                                <Button type="primary" htmlType="submit" loading={true}>
+                                <Button type="primary" htmlType="submit" loading={isSubmit}>
                                     Đăng ký
                                 </Button>
                             </Form.Item>
