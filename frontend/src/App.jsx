@@ -10,6 +10,7 @@ import BookPage from './pages/book';
 import Header from './components/header';
 import Footer from './components/footer';
 import Home from './components/Home';
+import RegisterPage from './pages/register';
 
 const Layout = () => {
     return (
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <LoginPage />,
+    },
+    {
+        path: "/register",
+        element: <RegisterPage />,
     },
 ]);
 
