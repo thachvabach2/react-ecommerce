@@ -12,6 +12,10 @@ const postLogin = (username, password) => {
     })
 }
 
+const fetchAccount = () => {
+    return axios.get('/api/v1/auth/account');
+}
+
 export {
-    postRegister, postLogin
+    postRegister, postLogin, fetchAccount
 };
