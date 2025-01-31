@@ -6,10 +6,9 @@ const postRegister = (fullName, email, password, phone) => {
     })
 }
 
-const postLogin = (payload) => {
+const postLogin = (username, password) => {
     return axios.post('/api/v1/auth/login', {
-        username: payload.username,
-        password: payload.password,
+        username, password, delay: 2000
     })
 }
 
