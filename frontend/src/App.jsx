@@ -7,8 +7,8 @@ import {
 import LoginPage from './pages/login';
 import ContactPage from './pages/contact';
 import BookPage from './pages/book';
-import Header from './components/header';
-import Footer from './components/footer';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './components/Home';
 import RegisterPage from './pages/register';
 import { fetchAccount } from './services/api';
@@ -50,7 +50,7 @@ export default function App() {
     const getAccount = async () => {
         if (window.location.pathname === '/login'
             || window.location.pathname === '/register'
-            || window.location.pathname === '/'
+            // || window.location.pathname === '/'
         ) {
             return;
         }
