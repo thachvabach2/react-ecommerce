@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { fetchAccount, getRefreshToken } from '../services/api';
+import { getRefreshToken } from '../services/api';
 
 const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -49,6 +49,14 @@ instance.interceptors.response.use(function (response) {
             localStorage.setItem('access_token', res.data.access_token);
             return instance.request(error.config);
         }
+    }
+
+    // handle refresh_token expired
+    if (error.config && error.response
+        && +error.response.status === 400
+        && error.config.url === '/api/v1/auth/refresh'
+    ) {
+        window.location.href = '/login';
     }
     return error?.response?.data ?? Promise.reject(error);
 });
