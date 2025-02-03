@@ -20,7 +20,11 @@ const postLogout = () => {
     return axios.post('/api/v1/auth/logout');
 }
 
+const getRefreshToken = () => {
+    return axios.get('/api/v1/auth/refresh');
+}
+
 export {
     postRegister, postLogin, fetchAccount,
-    postLogout,
+    postLogout, getRefreshToken,
 };
