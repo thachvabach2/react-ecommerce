@@ -13,6 +13,11 @@ instance.defaults.headers.common = { 'Authorization': `Bearer ${localStorage.get
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
     // Do something before request is sent
+    // nếu không có dòng dưới thì sau login phải f5 mới logout được (set headers author ở trên ko giúp làm điều đó)
+    if (typeof window !== "undefined" && window && window.localStorage && window.localStorage.getItem('access_token')) {
+        config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('access_token');
+    }
+
     return config;
 }, function (error) {
     // Do something with request error

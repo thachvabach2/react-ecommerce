@@ -29,8 +29,6 @@ const LoginPage = () => {
                 duration: 5,
             });
         }
-        // console.log('>>> check res: ', res)
-        // console.log('Success:', values);
     };
 
     return (

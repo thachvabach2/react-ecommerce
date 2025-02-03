@@ -1,4 +1,4 @@
-import { Divider, Dropdown, Space } from 'antd';
+import { Divider, Dropdown, message, Space } from 'antd';
 import { FaReact } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
@@ -7,23 +7,35 @@ import { Drawer } from "antd";
 import { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import './header.scss'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { postLogout } from '../../services/api';
+import { doLogoutAction } from '../../redux/account/accountSlice';
 
 const Header = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
 
     const [openDrawer, setOpenDrawer] = useState(false);
 
+    const handleLogout = async (e) => {
+        const res = await postLogout();
+        if (e.key === 'logout' && res && res.data) {
+            dispatch(doLogoutAction());
+            message.success('Đăng xuất thành công')
+            navigate('/')
+        }
+    }
+
     const items = [
         {
-            label: <label>Quản lý tài khoản</label>,
+            label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
             key: 'account',
         },
         {
-            label: <label >Đăng xuất</label>,
+            label: <label style={{ cursor: 'pointer' }}>Đăng xuất</label>,
             key: 'logout',
         },
     ];
@@ -65,7 +77,7 @@ const Header = () => {
                                 {isAuthenticated === false ?
                                     <span onClick={() => navigate('/login')}>Đăng nhập</span>
                                     :
-                                    <Dropdown menu={{ items }} trigger={['hover']}>
+                                    <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['hover']}>
                                         <a onClick={(e) => e.preventDefault()}>
                                             <Space>
                                                 Welcome {user?.fullName}

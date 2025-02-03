@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import { Link, Outlet } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import {
     AuditOutlined,
@@ -12,12 +12,16 @@ import {
 } from '@ant-design/icons';
 import { MdOutlineDashboard } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { Button, Dropdown, Layout, Menu, Space } from 'antd';
+import { Button, Dropdown, Layout, Menu, message, Space } from 'antd';
 import './layout.scss'
+import { postLogout } from '../../services/api';
+import { doLogoutAction } from '../../redux/account/accountSlice';
 
 const { Sider, Content } = Layout;
 
 const LayoutAdmin = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = useSelector(state => state.account.user);
 
     const [activeMenu, setActiveMenu] = useState('dashboard');
@@ -60,15 +64,29 @@ const LayoutAdmin = () => {
 
     const itemsDropdown = [
         {
-            label: <label>Quản lý tài khoản</label>,
+            label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
             key: 'account',
         },
         {
-            label: <label >Đăng xuất</label>,
+            label: <label
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleLogout()}
+            >
+                Đăng xuất
+            </label>,
             key: 'logout',
         },
 
     ];
+
+    const handleLogout = async () => {
+        const res = await postLogout();
+        if (res && res.data) {
+            dispatch(doLogoutAction());
+            message.success('Đăng xuất thành công');
+            navigate('/');
+        }
+    }
 
     return (
         <Layout

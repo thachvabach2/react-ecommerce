@@ -16,6 +16,11 @@ const fetchAccount = () => {
     return axios.get('/api/v1/auth/account');
 }
 
+const postLogout = () => {
+    return axios.post('/api/v1/auth/logout');
+}
+
 export {
-    postRegister, postLogin, fetchAccount
+    postRegister, postLogin, fetchAccount,
+    postLogout,
 };
