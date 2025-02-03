@@ -133,7 +133,8 @@ const LayoutAdmin = () => {
                         </a>
                     </Dropdown>
                 </div>
-                <Content>
+                {/* style={{ padding: '10px' }} to fit with Manage User -> CRUD */}
+                <Content style={{ padding: '15px' }}>
                     <Outlet />
                 </Content>
                 <div className='admin-footer'>

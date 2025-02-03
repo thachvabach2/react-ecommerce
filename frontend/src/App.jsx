@@ -19,6 +19,7 @@ import NotFound from './components/NotFound';
 import AdminPage from './pages/admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
+import ManageUser from './pages/admin/user';
 
 
 const Layout = () => {
@@ -83,7 +84,7 @@ export default function App() {
                 },
                 {
                     path: "user",
-                    element: <ContactPage />
+                    element: <ManageUser />
                 },
                 {
                     path: "book",
