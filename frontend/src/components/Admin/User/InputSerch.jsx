@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Input, Row, Space, theme } from "antd";
 
-const AdvancedSearchForm = () => {
+const InputSearch = (props) => {
     const { token } = theme.useToken();
     const [form] = Form.useForm();
 
@@ -14,7 +14,21 @@ const AdvancedSearchForm = () => {
     };
 
     const onFinish = (values) => {
-        console.log("Received values of form: ", values);
+        // build query
+        let query = ``;
+        if (values.name) {
+            query += `&fullName=/${values.name}/i`;
+        }
+        if (values.email) {
+            query += `&email=/${values.email}/i`;
+        }
+        if (values.phone) {
+            query += `&phone=/${values.phone}/i`
+        }
+
+        if (query) {
+            props.handleSearch(query)
+        }
     };
 
     return (
@@ -91,14 +105,6 @@ const AdvancedSearchForm = () => {
             </Row>
         </Form>
     );
-}
-
-const InputSearch = () => {
-    return (
-        <div>
-            <AdvancedSearchForm />
-        </div>
-    )
 }
 
 export default InputSearch;
