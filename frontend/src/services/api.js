@@ -24,7 +24,11 @@ const getRefreshToken = () => {
     return axios.get('/api/v1/auth/refresh');
 }
 
+const getUsersWithPaginate = (query) => {
+    return axios.get(`/api/v1/user?${query}`);
+}
+
 export {
     postRegister, postLogin, fetchAccount,
-    postLogout, getRefreshToken,
+    postLogout, getRefreshToken, getUsersWithPaginate
 };

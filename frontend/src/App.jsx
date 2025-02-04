@@ -20,6 +20,7 @@ import AdminPage from './pages/admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import ManageUser from './pages/admin/user';
+import './styles/reset.scss'
 
 
 const Layout = () => {
