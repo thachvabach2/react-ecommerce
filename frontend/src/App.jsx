@@ -84,7 +84,10 @@ export default function App() {
                 },
                 {
                     path: "user",
-                    element: <ManageUser />
+                    element:
+                        <ProtectedRoute>
+                            <ManageUser />
+                        </ProtectedRoute>
                 },
                 {
                     path: "book",
