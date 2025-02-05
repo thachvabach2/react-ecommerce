@@ -2,39 +2,7 @@ import { Col, Row, Table } from 'antd';
 import InputSearch from './InputSerch';
 import { useEffect, useState } from 'react';
 import { getUsersWithPaginate } from '../../../services/api';
-
-const columns = [
-    {
-        title: "Id",
-        dataIndex: "_id",
-    },
-    {
-        title: "Tên hiển thị",
-        dataIndex: "fullName",
-        sorter: true,
-    },
-    {
-        title: "Email",
-        dataIndex: "email",
-        sorter: true,
-    },
-    {
-        title: "Số điện thoại",
-        dataIndex: "phone",
-        sorter: true,
-    },
-    {
-        title: "Action",
-        render: (value, record, index) => (
-            <>
-                <button
-                    onClick={() => { console.log('>>> check delete id: ', record._id) }}>
-                    Delete
-                </button>
-            </>
-        )
-    },
-];
+import UserDrawerViewDetail from './UserDrawerViewDetail';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -47,9 +15,55 @@ const UserTable = () => {
     const [sortQuery, setSortQuery] = useState('');
     const [filter, setFilter] = useState('');
 
+    const [isOpenDrawerViewDetail, setIsOpenDrawerViewDetail] = useState(false);
+    const [dataUserViewDetail, setDataUserViewDetail] = useState(null);
+
     useEffect(() => {
         fetchUsersWithPaginate();
     }, [current, pageSize, sortQuery, filter])
+
+    const columns = [
+        {
+            title: "Id",
+            dataIndex: "_id",
+            render: (value, record, index) => {
+                return (
+                    <>
+                        <a onClick={() => {
+                            setDataUserViewDetail(record);
+                            setIsOpenDrawerViewDetail(true);
+                        }}>{value}</a>
+                    </>
+                )
+            }
+        },
+        {
+            title: "Tên hiển thị",
+            dataIndex: "fullName",
+            sorter: true,
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            sorter: true,
+        },
+        {
+            title: "Số điện thoại",
+            dataIndex: "phone",
+            sorter: true,
+        },
+        {
+            title: "Action",
+            render: (value, record, index) => (
+                <>
+                    <button
+                        onClick={() => { console.log('>>> check delete id: ', record._id) }}>
+                        Delete
+                    </button>
+                </>
+            )
+        },
+    ];
 
     const fetchUsersWithPaginate = async () => {
         setIsLoading(true);
@@ -120,6 +134,12 @@ const UserTable = () => {
                     />
                 </Col>
             </Row>
+            <UserDrawerViewDetail
+                isOpenDrawerViewDetail={isOpenDrawerViewDetail}
+                setIsOpenDrawerViewDetail={setIsOpenDrawerViewDetail}
+                dataUserViewDetail={dataUserViewDetail}
+                setDataUserViewDetail={setDataUserViewDetail}
+            />
         </>
     )
 }
