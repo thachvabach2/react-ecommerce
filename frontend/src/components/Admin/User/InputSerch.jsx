@@ -27,7 +27,7 @@ const InputSearch = (props) => {
         }
 
         if (query) {
-            props.handleSearch(query)
+            props.setFilter(query);
         }
     };
 
@@ -96,6 +96,7 @@ const InputSearch = (props) => {
                         <Button
                             onClick={() => {
                                 form.resetFields();
+                                props.setFilter('');
                             }}
                         >
                             Clear
