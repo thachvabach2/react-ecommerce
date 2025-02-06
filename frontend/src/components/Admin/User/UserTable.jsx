@@ -1,10 +1,13 @@
-import { Button, Col, Row, Space, Table } from 'antd';
+import { Button, Col, Modal, Row, Space, Table } from 'antd';
 import InputSearch from './InputSerch';
 import { useEffect, useState } from 'react';
 import { getUsersWithPaginate } from '../../../services/api';
 import UserDrawerViewDetail from './UserDrawerViewDetail';
 import { ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import UserModalCreate from './UserModalCreate';
+import UserModalImport from './data/UserModalImport';
+import moment from 'moment';
+import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -21,6 +24,8 @@ const UserTable = () => {
     const [dataUserViewDetail, setDataUserViewDetail] = useState(null);
 
     const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
+
+    const [isOpenModalImport, setIsOpenModalImport] = useState(false);
 
     useEffect(() => {
         fetchUsersWithPaginate();
@@ -55,6 +60,18 @@ const UserTable = () => {
             title: "Số điện thoại",
             dataIndex: "phone",
             sorter: true,
+        },
+        {
+            title: "Ngày cập nhật",
+            dataIndex: "updatedAt",
+            sorter: true,
+            render: (value, record, index) => {
+                return (
+                    <span>
+                        {moment(record?.updatedAt).format(FOR_DATE_DISPLAY)}
+                    </span>
+                )
+            }
         },
         {
             title: "Action",
@@ -126,6 +143,7 @@ const UserTable = () => {
                         <Button
                             icon={<ImportOutlined />}
                             type="primary"
+                            onClick={() => setIsOpenModalImport(true)}
                         >Import</Button>
 
                         <Button
@@ -189,6 +207,11 @@ const UserTable = () => {
                 isOpenModalCreate={isOpenModalCreate}
                 setIsOpenModalCreate={setIsOpenModalCreate}
                 fetchUsersWithPaginate={fetchUsersWithPaginate}
+            />
+
+            <UserModalImport
+                isOpenModalImport={isOpenModalImport}
+                setIsOpenModalImport={setIsOpenModalImport}
             />
         </>
     )
