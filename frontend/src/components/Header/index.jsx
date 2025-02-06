@@ -1,14 +1,13 @@
-import { Divider, Dropdown, message, Space } from 'antd';
+import { Avatar, Divider, Dropdown, message, Space } from 'antd';
 import { FaReact } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { Badge } from 'antd';
 import { Drawer } from "antd";
 import { useState } from 'react';
-import { DownOutlined } from '@ant-design/icons';
 import './header.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { postLogout } from '../../services/api';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 
@@ -29,7 +28,7 @@ const Header = () => {
         }
     }
 
-    const items = [
+    let items = [
         {
             label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
             key: 'account',
@@ -39,6 +38,15 @@ const Header = () => {
             key: 'logout',
         },
     ];
+
+    if (user?.role === 'ADMIN') {
+        items.unshift({
+            label: <Link to='/admin'>Trang quản trị</Link>,
+            key: 'admin',
+        },)
+    }
+
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
     return (
         <>
@@ -80,8 +88,11 @@ const Header = () => {
                                     <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['hover']}>
                                         <a onClick={(e) => e.preventDefault()}>
                                             <Space>
-                                                Welcome {user?.fullName}
-                                                <DownOutlined />
+                                                <Avatar
+                                                    src={urlAvatar}
+                                                    alt={'avatar'}
+                                                />
+                                                {user?.fullName}
                                             </Space>
                                         </a>
                                     </Dropdown>

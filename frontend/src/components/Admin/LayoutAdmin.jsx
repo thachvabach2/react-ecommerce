@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import {
     AuditOutlined,
     DollarOutlined,
-    DownOutlined,
     FileTextOutlined,
     FormOutlined,
     MenuFoldOutlined,
@@ -12,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import { MdOutlineDashboard } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { Button, Dropdown, Layout, Menu, message, Space } from 'antd';
+import { Avatar, Button, Dropdown, Layout, Menu, message, Space } from 'antd';
 import './layout.scss'
 import { postLogout } from '../../services/api';
 import { doLogoutAction } from '../../redux/account/accountSlice';
@@ -68,6 +67,10 @@ const LayoutAdmin = () => {
             key: 'account',
         },
         {
+            label: <Link to='/'>Trang chủ</Link>,
+            key: 'home',
+        },
+        {
             label: <label
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleLogout()}
@@ -87,6 +90,8 @@ const LayoutAdmin = () => {
             navigate('/');
         }
     }
+
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
     return (
         <Layout
@@ -127,8 +132,11 @@ const LayoutAdmin = () => {
                     <Dropdown menu={{ items: itemsDropdown }} trigger={['hover']} >
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Welcome {user?.fullName}
-                                <DownOutlined />
+                                <Avatar
+                                    src={urlAvatar}
+                                    alt={'avatar'}
+                                />
+                                {user?.fullName}
                             </Space>
                         </a>
                     </Dropdown>
