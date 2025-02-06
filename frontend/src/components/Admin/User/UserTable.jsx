@@ -1,8 +1,9 @@
-import { Col, Row, Table } from 'antd';
+import { Button, Col, Row, Space, Table } from 'antd';
 import InputSearch from './InputSerch';
 import { useEffect, useState } from 'react';
 import { getUsersWithPaginate } from '../../../services/api';
 import UserDrawerViewDetail from './UserDrawerViewDetail';
+import { ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -108,6 +109,43 @@ const UserTable = () => {
         console.log("params", pagination, filters, sorter, extra);
     };
 
+    const renderHeader = () => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Table List Users</span>
+                <span>
+                    <Space size="middle">
+                        <Button
+                            icon={<ExportOutlined />}
+                            type="primary"
+                        >Export</Button>
+
+                        <Button
+                            icon={<ImportOutlined />}
+                            type="primary"
+                        >Import</Button>
+
+                        <Button
+                            icon={<PlusCircleOutlined />}
+                            type="primary"
+                        >Thêm mới</Button>
+
+                        <Button
+                            type='ghost'
+                            onClick={() => {
+                                setFilter('');
+                                setSortQuery('');
+                                setCurrent(1);
+                            }}
+                        >
+                            <ReloadOutlined />
+                        </Button>
+                    </Space>
+                </span>
+            </div>
+        )
+    }
+
     return (
         <>
             <Row gutter={[20, 20]}>
@@ -118,6 +156,7 @@ const UserTable = () => {
                 </Col>
                 <Col span={24}>
                     <Table
+                        title={renderHeader}
                         className='def'
                         columns={columns}
                         dataSource={listUser}
@@ -128,6 +167,7 @@ const UserTable = () => {
                             current: current,
                             pageSize: pageSize,
                             total: total,
+                            showTotal: (total, range) => { return (<div>{range[0]} - {range[1]} of {total} items</div>) },
                             showSizeChanger: true,
                             pageSizeOptions: ['5', '10', '20', '50', '100']
                         }}
