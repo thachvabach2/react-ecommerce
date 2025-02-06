@@ -93,6 +93,17 @@ const LayoutAdmin = () => {
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
+    const siderStyle = {
+        overflow: 'auto',
+        height: '100vh',
+        position: 'sticky',
+        insetInlineStart: 0,
+        top: 0,
+        bottom: 0,
+        // scrollbarWidth: 'thin',
+        // scrollbarGutter: 'stable',
+    }
+
     return (
         <Layout
             style={{ minHeight: '100vh' }}
@@ -104,6 +115,7 @@ const LayoutAdmin = () => {
                 collapsible
                 collapsed={collapsed}
                 onCollapse={(value) => setCollapsed(value)}
+                style={siderStyle}
             >
                 <div className='side-bar__header'
                     style={{ height: 32, margin: 16, textAlign: 'center' }}>
