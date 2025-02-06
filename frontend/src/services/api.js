@@ -28,7 +28,12 @@ const getUsersWithPaginate = (query) => {
     return axios.get(`/api/v1/user?${query}`);
 }
 
+const postCreateAUser = (fullName, password, email, phone) => {
+    return axios.post('/api/v1/user', { fullName, password, email, phone })
+}
+
 export {
     postRegister, postLogin, fetchAccount,
-    postLogout, getRefreshToken, getUsersWithPaginate
+    postLogout, getRefreshToken, getUsersWithPaginate,
+    postCreateAUser,
 };

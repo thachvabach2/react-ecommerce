@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getUsersWithPaginate } from '../../../services/api';
 import UserDrawerViewDetail from './UserDrawerViewDetail';
 import { ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import UserModalCreate from './UserModalCreate';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -18,6 +19,8 @@ const UserTable = () => {
 
     const [isOpenDrawerViewDetail, setIsOpenDrawerViewDetail] = useState(false);
     const [dataUserViewDetail, setDataUserViewDetail] = useState(null);
+
+    const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
 
     useEffect(() => {
         fetchUsersWithPaginate();
@@ -128,6 +131,7 @@ const UserTable = () => {
                         <Button
                             icon={<PlusCircleOutlined />}
                             type="primary"
+                            onClick={() => setIsOpenModalCreate(true)}
                         >Thêm mới</Button>
 
                         <Button
@@ -179,6 +183,12 @@ const UserTable = () => {
                 setIsOpenDrawerViewDetail={setIsOpenDrawerViewDetail}
                 dataUserViewDetail={dataUserViewDetail}
                 setDataUserViewDetail={setDataUserViewDetail}
+            />
+
+            <UserModalCreate
+                isOpenModalCreate={isOpenModalCreate}
+                setIsOpenModalCreate={setIsOpenModalCreate}
+                fetchUsersWithPaginate={fetchUsersWithPaginate}
             />
         </>
     )
