@@ -36,8 +36,12 @@ const postCreateBulkUsers = (listUsers) => {
     return axios.post('/api/v1/user/bulk-create', listUsers)
 }
 
+const putUpdateAUser = (_id, fullName, phone) => {
+    return axios.put('/api/v1/user', { _id, fullName, phone });
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
-    postCreateAUser, postCreateBulkUsers,
+    postCreateAUser, postCreateBulkUsers, putUpdateAUser,
 };

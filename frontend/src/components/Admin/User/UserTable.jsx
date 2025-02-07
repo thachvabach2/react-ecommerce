@@ -1,14 +1,15 @@
-import { Button, Col, Modal, Row, Space, Table } from 'antd';
+import { Button, Col, Modal, Popconfirm, Row, Space, Table } from 'antd';
 import InputSearch from './InputSerch';
 import { useEffect, useState } from 'react';
 import { getUsersWithPaginate } from '../../../services/api';
 import UserDrawerViewDetail from './UserDrawerViewDetail';
-import { ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import UserModalCreate from './UserModalCreate';
 import UserModalImport from './data/UserModalImport';
 import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 import * as XLSX from 'xlsx';
+import UserModalUpdate from './UserModalUpdate';
 
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -27,6 +28,9 @@ const UserTable = () => {
     const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
 
     const [isOpenModalImport, setIsOpenModalImport] = useState(false);
+
+    const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
+    const [dataUserUpdate, setDataUserUpdate] = useState({});
 
     useEffect(() => {
         fetchUsersWithPaginate();
@@ -78,10 +82,30 @@ const UserTable = () => {
             title: "Action",
             render: (value, record, index) => (
                 <>
-                    <button
-                        onClick={() => { console.log('>>> check delete id: ', record._id) }}>
-                        Delete
-                    </button>
+                    <Space size={'large'}>
+                        <Popconfirm
+                            placement="leftTop"
+                            title={'Xác nhận xóa user'}
+                            description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            onConfirm={() => console.log('>>>>check key: ', record._id)}
+                            okText={'Xác nhận'}
+                            cancelText={'Hủy'}
+                        >
+                            <DeleteTwoTone
+                                twoToneColor={'#FF0000'}
+                                style={{ cursor: 'pointer' }}
+                            />
+                        </Popconfirm>
+
+                        <EditTwoTone
+                            twoToneColor={'#FFA500'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                                setIsOpenModalUpdate(true);
+                                setDataUserUpdate(record);
+                            }}
+                        />
+                    </Space>
                 </>
             )
         },
@@ -223,6 +247,14 @@ const UserTable = () => {
             <UserModalImport
                 isOpenModalImport={isOpenModalImport}
                 setIsOpenModalImport={setIsOpenModalImport}
+                fetchUsersWithPaginate={fetchUsersWithPaginate}
+            />
+
+            <UserModalUpdate
+                isOpenModalUpdate={isOpenModalUpdate}
+                setIsOpenModalUpdate={setIsOpenModalUpdate}
+                dataUserUpdate={dataUserUpdate}
+                setDataUserUpdate={setDataUserUpdate}
                 fetchUsersWithPaginate={fetchUsersWithPaginate}
             />
         </>
