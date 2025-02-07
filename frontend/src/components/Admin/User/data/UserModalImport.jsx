@@ -4,6 +4,7 @@ import { message, Upload } from 'antd';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { postCreateBulkUsers } from '../../../../services/api';
+import templateFile from './data.xlsx?url' //read not image file
 
 const { Dragger } = Upload;
 
@@ -137,6 +138,7 @@ const UserModalImport = (props) => {
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
                     <p className="ant-upload-hint">
                         Support for a single. Only accept .csv .xls .xlsx
+                        or <a onClick={(e) => e.stopPropagation()} href={templateFile} target="_blank" download>Download Sample File</a>
                     </p>
                 </Dragger>
 
