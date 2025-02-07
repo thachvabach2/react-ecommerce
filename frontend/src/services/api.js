@@ -40,8 +40,13 @@ const putUpdateAUser = (_id, fullName, phone) => {
     return axios.put('/api/v1/user', { _id, fullName, phone });
 }
 
+const deleteAUser = (id) => {
+    return axios.delete(`/api/v1/user/${id}`);
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
     postCreateAUser, postCreateBulkUsers, putUpdateAUser,
+    deleteAUser,
 };

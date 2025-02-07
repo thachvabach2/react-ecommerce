@@ -1,7 +1,7 @@
-import { Button, Col, Modal, Popconfirm, Row, Space, Table } from 'antd';
+import { Button, Col, message, notification, Popconfirm, Row, Space, Table } from 'antd';
 import InputSearch from './InputSerch';
 import { useEffect, useState } from 'react';
-import { getUsersWithPaginate } from '../../../services/api';
+import { deleteAUser, getUsersWithPaginate } from '../../../services/api';
 import UserDrawerViewDetail from './UserDrawerViewDetail';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, ImportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import UserModalCreate from './UserModalCreate';
@@ -84,10 +84,10 @@ const UserTable = () => {
                 <>
                     <Space size={'large'}>
                         <Popconfirm
-                            placement="leftTop"
+                            placement="left"
                             title={'Xác nhận xóa user'}
                             description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            onConfirm={() => console.log('>>>>check key: ', record._id)}
+                            onConfirm={() => handleDeleteUser(record._id)}
                             okText={'Xác nhận'}
                             cancelText={'Hủy'}
                         >
@@ -200,6 +200,19 @@ const UserTable = () => {
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
             XLSX.writeFile(workbook, "ExportUser.csv");
+        }
+    }
+
+    const handleDeleteUser = async (userId) => {
+        const res = await deleteAUser(userId);
+        if (res && res.data) {
+            message.success('Xóa user thành công');
+            await fetchUsersWithPaginate();
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra!',
+                description: res.message,
+            })
         }
     }
 
