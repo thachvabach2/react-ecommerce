@@ -212,6 +212,7 @@ const UserTable = () => {
             <UserModalImport
                 isOpenModalImport={isOpenModalImport}
                 setIsOpenModalImport={setIsOpenModalImport}
+                fetchUsersWithPaginate={fetchUsersWithPaginate}
             />
         </>
     )

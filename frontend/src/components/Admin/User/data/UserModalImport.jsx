@@ -1,8 +1,9 @@
-import { Modal, Table } from "antd";
+import { Modal, notification, Table } from "antd";
 import { InboxOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
+import { postCreateBulkUsers } from '../../../../services/api';
 
 const { Dragger } = Upload;
 
@@ -10,7 +11,9 @@ const UserModalImport = (props) => {
     const { setIsOpenModalImport, isOpenModalImport } = props
 
     const [dataExcel, setDataExcel] = useState([]);
+    const [fileUploaded, setFileUploaded] = useState([])
 
+    // https://stackoverflow.com/questions/51514757/action-function-is-required-with-antd-upload-control-but-i-dont-need-it
     const dummyRequest = ({ file, onSuccess }) => {
         setTimeout(() => {
             onSuccess("ok");
@@ -19,18 +22,21 @@ const UserModalImport = (props) => {
 
     const propsUpload = {
         name: "file",
+        fileList: fileUploaded,
         // only choose single file
         multiple: false,
         // limit 1 file uploaded
         maxCount: 1,
         accept: ".csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 
-        //prevent upload to server (default action)
+        // prevent upload to server (default action)
         customRequest: dummyRequest,
         onChange(info) {
+            setFileUploaded(info.fileList);
             const { status } = info.file;
             if (status !== "uploading") {
-                console.log(info.file, info.fileList);
+                // không xóa
+                // console.log(info.file, info.fileList);
             }
             if (status === "done") {
                 if (info.fileList && info.fileList.length > 0) {
@@ -39,9 +45,9 @@ const UserModalImport = (props) => {
                     reader.readAsArrayBuffer(file);
 
                     reader.onload = (e) => {
-                        let data = new Uint8Array(e.target.result);
+                        let data = new Uint8Array(reader.result); //reader.result = e.target.result
                         let workbook = XLSX.read(data, { type: 'array' });
-                        // // find the name of your sheet in the workbook first
+                        // find the name of your sheet in the workbook first
                         let sheetName = workbook.Sheets[workbook.SheetNames[0]];
 
                         const json = XLSX.utils.sheet_to_json(sheetName, {
@@ -61,6 +67,9 @@ const UserModalImport = (props) => {
         onDrop(e) {
             console.log("Dropped files", e.dataTransfer.files);
         },
+        onRemove(file) {
+            setDataExcel([]);
+        }
     };
 
     const columns = [
@@ -78,18 +87,45 @@ const UserModalImport = (props) => {
         },
     ];
 
+    const handleSubmit = async () => {
+        const data = dataExcel.map(item => {
+            item.password = '123456';
+            return item;
+        })
+        const res = await postCreateBulkUsers(data);
+        if (res && res.data) {
+            notification.success({
+                message: 'Upload thành công',
+                description: `Success: ${res.data.countSuccess}, Error: ${res.data.countError}`
+            })
+            setIsOpenModalImport(false);
+            setDataExcel([]);
+            setFileUploaded([]);
+            props.fetchUsersWithPaginate();
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message,
+            })
+        }
+    }
+
     return (
         <>
             <Modal
                 title="Import data user"
-                open={isOpenModalImport}
-                onOk={() => setIsOpenModalImport(false)}
-                onCancel={() => setIsOpenModalImport(false)}
-                okText={'Import'}
                 width={'50vw'}
-                // disable okButton
+                open={isOpenModalImport}
+                onOk={() => handleSubmit()}
+                onCancel={() => {
+                    setIsOpenModalImport(false);
+                    setDataExcel([]);
+                    setFileUploaded([]);
+                }}
+                okText={'Import data'}
+                // disable okButton when donn't have data
                 okButtonProps={{
-                    disabled: true
+                    disabled: dataExcel.length < 1,
                 }}
                 // can't close modal when click outside
                 maskClosable={false}

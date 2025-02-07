@@ -141,7 +141,7 @@ const LayoutAdmin = () => {
                             height: 64,
                         }}
                     />
-                    <Dropdown menu={{ items: itemsDropdown }} trigger={['hover']} >
+                    <Dropdown menu={{ items: itemsDropdown }} placement="bottomRight" trigger={['hover']} >
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
                                 <Avatar
