@@ -1,6 +1,8 @@
 import { Button, Col, Form, Input, Row, Space, theme } from 'antd';
 
-const InputSearch = () => {
+const InputSearch = (props) => {
+    const { setQueryFilter } = props;
+
     const [form] = Form.useForm();
     const { token } = theme.useToken();
 
@@ -13,6 +15,17 @@ const InputSearch = () => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
+        let queryFilter = '';
+        if (values.mainText) {
+            queryFilter += `&mainText=/${values.mainText}/i`;
+        }
+        if (values.author) {
+            queryFilter += `&author=/${values.author}/i`;
+        }
+        if (values.category) {
+            queryFilter += `&category=/${values.category}/i`;
+        }
+        setQueryFilter(queryFilter);
     };
 
     return (
@@ -28,7 +41,7 @@ const InputSearch = () => {
                     <Col span={8}>
                         <Form.Item
                             label="Tên sách"
-                            name="name"
+                            name="mainText"
                         >
                             <Input placeholder="placeholder" />
                         </Form.Item>

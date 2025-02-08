@@ -13,20 +13,28 @@ const BookTable = () => {
 
     const [listBook, setListBook] = useState([]);
 
+    const [queryFilter, setQueryFilter] = useState('');
+
     useEffect(() => {
         fetchListBooks();
-    }, [current, pageSize])
+    }, [current, pageSize, queryFilter])
 
     const fetchListBooks = async () => {
         let totalQuery = `current=${current}&pageSize=${pageSize}`;
         setIsLoading(true);
+
+        if (queryFilter) {
+            totalQuery += queryFilter;
+            setCurrent(1);
+        }
+
         const res = await getListBooksWithPaginate(totalQuery);
-        if (res && res.data && res.data.result.length > 0) {
+        if (res && res.data) {
             setListBook(res.data.result);
             setTotal(res.data.meta.total)
         }
         setIsLoading(false);
-        // console.log('>>> check res: ', res);
+        console.log('>>> check total query: ', totalQuery);
     }
 
     const columns = [
@@ -95,7 +103,10 @@ const BookTable = () => {
         <>
             <Row gutter={[20, 20]}>
                 <Col span={24}>
-                    <InputSearch />
+                    <InputSearch
+                        queryFilter={queryFilter}
+                        setQueryFilter={setQueryFilter}
+                    />
                 </Col>
                 <Col span={24}>
                     <Table
