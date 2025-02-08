@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getListBooksWithPaginate } from '../../../services/api';
 import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
+import BookDrawerViewDetail from './BookDrawerViewDetail';
 
 const BookTable = () => {
     const [current, setCurrent] = useState(1);
@@ -15,6 +16,9 @@ const BookTable = () => {
 
     const [filterQuery, setFilterQuery] = useState('');
     const [sortQuery, setSortQuery] = useState('');
+
+    const [isOpenDrawerViewDetail, setIsOpenDrawerViewDetail] = useState(false);
+    const [dataViewDetail, setDataViewDetail] = useState({});
 
     useEffect(() => {
         fetchListBooks();
@@ -45,6 +49,16 @@ const BookTable = () => {
         {
             title: "Id",
             dataIndex: "_id",
+            render: (value, record, index) => {
+                return (
+                    <>
+                        <a onClick={() => {
+                            setIsOpenDrawerViewDetail(true);
+                            setDataViewDetail(record);
+                        }}>{value}</a >
+                    </>
+                )
+            }
         },
         {
             title: "Tên sách",
@@ -142,6 +156,13 @@ const BookTable = () => {
                     />
                 </Col>
             </Row>
+
+            <BookDrawerViewDetail
+                isOpenDrawerViewDetail={isOpenDrawerViewDetail}
+                setIsOpenDrawerViewDetail={setIsOpenDrawerViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
         </>
     )
 }
