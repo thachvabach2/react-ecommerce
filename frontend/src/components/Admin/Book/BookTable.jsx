@@ -13,19 +13,23 @@ const BookTable = () => {
 
     const [listBook, setListBook] = useState([]);
 
-    const [queryFilter, setQueryFilter] = useState('');
+    const [filterQuery, setFilterQuery] = useState('');
+    const [sortQuery, setSortQuery] = useState('');
 
     useEffect(() => {
         fetchListBooks();
-    }, [current, pageSize, queryFilter])
+    }, [current, pageSize, filterQuery, sortQuery])
 
     const fetchListBooks = async () => {
         let totalQuery = `current=${current}&pageSize=${pageSize}`;
         setIsLoading(true);
 
-        if (queryFilter) {
-            totalQuery += queryFilter;
-            setCurrent(1);
+        if (filterQuery) {
+            totalQuery += filterQuery;
+        }
+
+        if (sortQuery) {
+            totalQuery += sortQuery;
         }
 
         const res = await getListBooksWithPaginate(totalQuery);
@@ -96,6 +100,15 @@ const BookTable = () => {
             setPageSize(pagination.pageSize);
             setCurrent(1);
         }
+        if (sorter && sorter.field) {
+            let q = ''
+            if (sorter.order === 'ascend') {
+                q = `&sort=${sorter.field}`
+            } else if (sorter.order === 'descend') {
+                q = `&sort=-${sorter.field}`
+            }
+            setSortQuery(q);
+        }
         console.log("params", pagination, filters, sorter, extra);
     };
 
@@ -104,8 +117,9 @@ const BookTable = () => {
             <Row gutter={[20, 20]}>
                 <Col span={24}>
                     <InputSearch
-                        queryFilter={queryFilter}
-                        setQueryFilter={setQueryFilter}
+                        filterQuery={filterQuery}
+                        setFilterQuery={setFilterQuery}
+                        setCurrent={setCurrent}
                     />
                 </Col>
                 <Col span={24}>

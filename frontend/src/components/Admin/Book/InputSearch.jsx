@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Row, Space, theme } from 'antd';
 
 const InputSearch = (props) => {
-    const { setQueryFilter } = props;
+    const { setFilterQuery, setCurrent } = props;
 
     const [form] = Form.useForm();
     const { token } = theme.useToken();
@@ -15,17 +15,18 @@ const InputSearch = (props) => {
 
     const onFinish = (values) => {
         console.log("Success:", values);
-        let queryFilter = '';
+        let filterQuery = '';
         if (values.mainText) {
-            queryFilter += `&mainText=/${values.mainText}/i`;
+            filterQuery += `&mainText=/${values.mainText}/i`;
         }
         if (values.author) {
-            queryFilter += `&author=/${values.author}/i`;
+            filterQuery += `&author=/${values.author}/i`;
         }
         if (values.category) {
-            queryFilter += `&category=/${values.category}/i`;
+            filterQuery += `&category=/${values.category}/i`;
         }
-        setQueryFilter(queryFilter);
+        setFilterQuery(filterQuery);
+        setCurrent(1);
     };
 
     return (
