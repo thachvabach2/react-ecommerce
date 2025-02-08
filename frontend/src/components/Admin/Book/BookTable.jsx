@@ -1,7 +1,33 @@
 import { Col, Row, Table } from 'antd';
 import InputSearch from './InputSearch';
+import { useEffect, useState } from 'react';
+import { getListBooksWithPaginate } from '../../../services/api';
+import moment from 'moment';
+import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 
 const BookTable = () => {
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(3);
+    const [total, setTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [listBook, setListBook] = useState([]);
+
+    useEffect(() => {
+        fetchListBooks();
+    }, [current, pageSize])
+
+    const fetchListBooks = async () => {
+        let totalQuery = `current=${current}&pageSize=${pageSize}`;
+        setIsLoading(true);
+        const res = await getListBooksWithPaginate(totalQuery);
+        if (res && res.data && res.data.result.length > 0) {
+            setListBook(res.data.result);
+            setTotal(res.data.meta.total)
+        }
+        setIsLoading(false);
+        // console.log('>>> check res: ', res);
+    }
 
     const columns = [
         {
@@ -32,6 +58,15 @@ const BookTable = () => {
             title: "Ngày cập nhật",
             dataIndex: "updatedAt",
             sorter: true,
+            render: (value, record, index) => {
+                return (
+                    <>
+                        <span>
+                            {moment(value).format(FOR_DATE_DISPLAY)}
+                        </span>
+                    </>
+                )
+            }
         },
         {
             title: "Action",
@@ -45,19 +80,14 @@ const BookTable = () => {
         },
     ];
 
-    const data = [
-        {
-            key: "1",
-            _id: 123,
-            mainText: 'Một đời',
-            category: 'Music',
-            author: 'Soobin',
-            price: 120000,
-            updatedAt: '12:20:00'
-        },
-    ];
-
     const onChange = (pagination, filters, sorter, extra) => {
+        if (pagination && pagination.current !== current) {
+            setCurrent(pagination.current);
+        }
+        if (pagination && pagination.pageSize !== pageSize) {
+            setPageSize(pagination.pageSize);
+            setCurrent(1);
+        }
         console.log("params", pagination, filters, sorter, extra);
     };
 
@@ -69,15 +99,19 @@ const BookTable = () => {
                 </Col>
                 <Col span={24}>
                     <Table
-                        columns={columns}
-                        dataSource={data}
-                        onChange={onChange}
                         title={() => 'Table List Books'}
+                        columns={columns}
+                        dataSource={listBook}
+                        rowKey={'_id'}
+                        onChange={onChange}
+                        loading={isLoading}
                         pagination={
                             {
-                                current: 1,
-                                pageSize: 5,
+                                current: current,
+                                pageSize: pageSize,
+                                total: total,
                                 showSizeChanger: true,
+                                pageSizeOptions: [3, 10, 20, 50, 100]
                             }
                         }
                     />

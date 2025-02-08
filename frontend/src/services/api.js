@@ -44,9 +44,13 @@ const deleteAUser = (id) => {
     return axios.delete(`/api/v1/user/${id}`);
 }
 
+const getListBooksWithPaginate = (query) => {
+    return axios.get(`/api/v1/book?${query}`);
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
     postCreateAUser, postCreateBulkUsers, putUpdateAUser,
-    deleteAUser,
+    deleteAUser, getListBooksWithPaginate,
 };
