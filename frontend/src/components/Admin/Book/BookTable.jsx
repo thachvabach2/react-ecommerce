@@ -1,10 +1,11 @@
-import { Col, Row, Table } from 'antd';
+import { Button, Col, Row, Space, Table } from 'antd';
 import InputSearch from './InputSearch';
 import { useEffect, useState } from 'react';
 import { getListBooksWithPaginate } from '../../../services/api';
 import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 import BookDrawerViewDetail from './BookDrawerViewDetail';
+import { ExportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 
 const BookTable = () => {
     const [current, setCurrent] = useState(1);
@@ -126,6 +127,44 @@ const BookTable = () => {
         console.log("params", pagination, filters, sorter, extra);
     };
 
+    const renderHeader = () => {
+        return (
+            <>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>
+                        Table List Books
+                    </span>
+                    <span>
+                        <Space size={'middle'}>
+                            <Button
+                                type="primary"
+                                icon={<ExportOutlined />}
+                            >
+                                Export
+                            </Button>
+                            <Button
+                                type="primary"
+                                icon={<PlusCircleOutlined />}
+                            >
+                                Thêm mới
+                            </Button>
+                            <Button
+                                type='ghost'
+                                onClick={() => {
+                                    setFilterQuery('');
+                                    setSortQuery('');
+                                    setCurrent(1);
+                                }}
+                            >
+                                <ReloadOutlined />
+                            </Button>
+                        </Space>
+                    </span>
+                </div>
+            </>
+        )
+    }
+
     return (
         <>
             <Row gutter={[20, 20]}>
@@ -138,7 +177,7 @@ const BookTable = () => {
                 </Col>
                 <Col span={24}>
                     <Table
-                        title={() => 'Table List Books'}
+                        title={() => renderHeader()}
                         columns={columns}
                         dataSource={listBook}
                         rowKey={'_id'}
