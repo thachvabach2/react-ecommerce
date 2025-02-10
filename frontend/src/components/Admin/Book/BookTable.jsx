@@ -6,6 +6,7 @@ import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 import BookDrawerViewDetail from './BookDrawerViewDetail';
 import { ExportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import BookModalCreate from './BookModalCreate';
 
 const BookTable = () => {
     const [current, setCurrent] = useState(1);
@@ -16,10 +17,12 @@ const BookTable = () => {
     const [listBook, setListBook] = useState([]);
 
     const [filterQuery, setFilterQuery] = useState('');
-    const [sortQuery, setSortQuery] = useState('');
+    const [sortQuery, setSortQuery] = useState('&sort=-updatedAt');
 
     const [isOpenDrawerViewDetail, setIsOpenDrawerViewDetail] = useState(false);
     const [dataViewDetail, setDataViewDetail] = useState({});
+
+    const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
 
     useEffect(() => {
         fetchListBooks();
@@ -145,6 +148,7 @@ const BookTable = () => {
                             <Button
                                 type="primary"
                                 icon={<PlusCircleOutlined />}
+                                onClick={() => setIsOpenModalCreate(true)}
                             >
                                 Thêm mới
                             </Button>
@@ -201,6 +205,12 @@ const BookTable = () => {
                 setIsOpenDrawerViewDetail={setIsOpenDrawerViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
+            />
+
+            <BookModalCreate
+                isOpenModalCreate={isOpenModalCreate}
+                setIsOpenModalCreate={setIsOpenModalCreate}
+                fetchListBooks={fetchListBooks}
             />
         </>
     )

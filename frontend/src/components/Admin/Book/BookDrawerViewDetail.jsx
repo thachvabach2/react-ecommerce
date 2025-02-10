@@ -31,7 +31,7 @@ const BookDrawerViewDetail = (props) => {
                     })
                 })
             }
-            setFileList([...imageSlider, imageThumbnail]);
+            setFileList([imageThumbnail, ...imageSlider]);
         }
     }, [dataViewDetail])
 
