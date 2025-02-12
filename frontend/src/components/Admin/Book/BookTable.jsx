@@ -1,12 +1,13 @@
-import { Button, Col, Row, Space, Table } from 'antd';
+import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
 import InputSearch from './InputSearch';
 import { useEffect, useState } from 'react';
 import { getListBooksWithPaginate } from '../../../services/api';
 import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 import BookDrawerViewDetail from './BookDrawerViewDetail';
-import { ExportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import BookModalCreate from './BookModalCreate';
+import BookModalUpdate from './BookModalUpdate';
 
 const BookTable = () => {
     const [current, setCurrent] = useState(1);
@@ -23,6 +24,9 @@ const BookTable = () => {
     const [dataViewDetail, setDataViewDetail] = useState({});
 
     const [isOpenModalCreate, setIsOpenModalCreate] = useState(false);
+
+    const [isOpenModalUpdate, setIsOpenModalUpdate] = useState(false);
+    const [dataUpdate, setDataUpdate] = useState({});
 
     useEffect(() => {
         fetchListBooks();
@@ -83,6 +87,13 @@ const BookTable = () => {
             title: "Giá tiền",
             dataIndex: "price",
             sorter: true,
+            render: (value, record, index) => {
+                return (
+                    <>
+                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(record.price)}
+                    </>
+                )
+            }
         },
         {
             title: "Ngày cập nhật",
@@ -100,13 +111,34 @@ const BookTable = () => {
         },
         {
             title: "Action",
-            render: (value, record, index) => {
-                return (
-                    <>
-                        <button>Delete</button>
-                    </>
-                )
-            }
+            render: (value, record, index) => (
+                <>
+                    <Space size={'large'}>
+                        <Popconfirm
+                            placement="left"
+                            title={'Xác nhận xóa user'}
+                            description={"Bạn có chắc chắn muốn xóa user này ?"}
+                            // onConfirm={() => handleDeleteUser(record._id)}
+                            okText={'Xác nhận'}
+                            cancelText={'Hủy'}
+                        >
+                            <DeleteTwoTone
+                                twoToneColor={'#FF0000'}
+                                style={{ cursor: 'pointer' }}
+                            />
+                        </Popconfirm>
+
+                        <EditTwoTone
+                            twoToneColor={'#FFA500'}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                                setIsOpenModalUpdate(true);
+                                setDataUpdate(record);
+                            }}
+                        />
+                    </Space>
+                </>
+            )
         },
     ];
 
@@ -174,7 +206,6 @@ const BookTable = () => {
             <Row gutter={[20, 20]}>
                 <Col span={24}>
                     <InputSearch
-                        filterQuery={filterQuery}
                         setFilterQuery={setFilterQuery}
                         setCurrent={setCurrent}
                     />
@@ -193,7 +224,8 @@ const BookTable = () => {
                                 pageSize: pageSize,
                                 total: total,
                                 showSizeChanger: true,
-                                pageSizeOptions: [3, 10, 20, 50, 100]
+                                pageSizeOptions: [3, 10, 20, 50, 100],
+                                showTotal: (total, range) => { return (<div> {range[0]}-{range[1]} trên {total} items</div>) }
                             }
                         }
                     />
@@ -210,6 +242,14 @@ const BookTable = () => {
             <BookModalCreate
                 isOpenModalCreate={isOpenModalCreate}
                 setIsOpenModalCreate={setIsOpenModalCreate}
+                fetchListBooks={fetchListBooks}
+            />
+
+            <BookModalUpdate
+                isOpenModalUpdate={isOpenModalUpdate}
+                setIsOpenModalUpdate={setIsOpenModalUpdate}
+                dataUpdate={dataUpdate}
+                setDataUpdate={setDataUpdate}
                 fetchListBooks={fetchListBooks}
             />
         </>

@@ -67,10 +67,14 @@ const postCreateABook = (thumbnail, slider, mainText, author, price, sold, quant
     return axios.post('/api/v1/book', { thumbnail, slider, mainText, author, price, sold, quantity, category })
 }
 
+const putUpdateABook = (id, thumbnail, slider, mainText, author, price, sold, quantity, category) => {
+    return axios.put(`/api/v1/book/${id}`, { thumbnail, slider, mainText, author, price, sold, quantity, category });
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
     postCreateAUser, postCreateBulkUsers, putUpdateAUser,
     deleteAUser, getListBooksWithPaginate, getBookCategories,
-    postUploadImageBook, postCreateABook,
+    postUploadImageBook, postCreateABook, putUpdateABook,
 };
