@@ -1,13 +1,14 @@
-import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
+import { Button, Col, message, notification, Popconfirm, Row, Space, Table } from 'antd';
 import InputSearch from './InputSearch';
 import { useEffect, useState } from 'react';
-import { getListBooksWithPaginate } from '../../../services/api';
+import { deleteABook, getListBooksWithPaginate } from '../../../services/api';
 import moment from 'moment';
 import { FOR_DATE_DISPLAY } from '../../../utils/constant';
 import BookDrawerViewDetail from './BookDrawerViewDetail';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import BookModalCreate from './BookModalCreate';
 import BookModalUpdate from './BookModalUpdate';
+import * as XLSX from 'xlsx';
 
 const BookTable = () => {
     const [current, setCurrent] = useState(1);
@@ -116,9 +117,9 @@ const BookTable = () => {
                     <Space size={'large'}>
                         <Popconfirm
                             placement="left"
-                            title={'Xác nhận xóa user'}
-                            description={"Bạn có chắc chắn muốn xóa user này ?"}
-                            // onConfirm={() => handleDeleteUser(record._id)}
+                            title={'Xác nhận xóa book'}
+                            description={"Bạn có chắc chắn muốn xóa book này ?"}
+                            onConfirm={() => handleDeleteBook(record._id)}
                             okText={'Xác nhận'}
                             cancelText={'Hủy'}
                         >
@@ -160,7 +161,7 @@ const BookTable = () => {
             setSortQuery(q);
         }
         console.log("params", pagination, filters, sorter, extra);
-    };
+    }
 
     const renderHeader = () => {
         return (
@@ -174,6 +175,7 @@ const BookTable = () => {
                             <Button
                                 type="primary"
                                 icon={<ExportOutlined />}
+                                onClick={() => handleExportData()}
                             >
                                 Export
                             </Button>
@@ -188,7 +190,7 @@ const BookTable = () => {
                                 type='ghost'
                                 onClick={() => {
                                     setFilterQuery('');
-                                    setSortQuery('');
+                                    setSortQuery('&sort=-updatedAt');
                                     setCurrent(1);
                                 }}
                             >
@@ -199,6 +201,28 @@ const BookTable = () => {
                 </div>
             </>
         )
+    }
+
+    const handleDeleteBook = async (id) => {
+        const res = await deleteABook(id);
+        if (res && res.data) {
+            message.success('Xóa book thành công');
+            await fetchListBooks();
+        } else {
+            notification.error({
+                message: 'Đã có lỗi xảy ra!',
+                description: res.message,
+            })
+        }
+    }
+
+    const handleExportData = () => {
+        if (listBook.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(listBook);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "ExportBook.csv");
+        }
     }
 
     return (

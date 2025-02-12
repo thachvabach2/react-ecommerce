@@ -214,10 +214,6 @@ const BookModalUpdate = (props) => {
         });
     };
 
-    // console.log('>>>> check initForm: ', initForm)
-    console.log('>>>> check form: ', form.getFieldsValue());
-    console.log('-------------')
-
     return (
         <>
             <Modal
