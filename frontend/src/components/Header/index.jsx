@@ -67,7 +67,9 @@ const Header = () => {
 
                             <input
                                 className='input-search' type={'text'}
-                                placeholder='Bạn tìm gì hôm nay' />
+                                placeholder='Bạn tìm gì hôm nay'
+                                id='input-search' // fix issue
+                            />
                         </div>
                     </div>
 
@@ -85,7 +87,7 @@ const Header = () => {
                                 {isAuthenticated === false ?
                                     <span onClick={() => navigate('/login')}>Đăng nhập</span>
                                     :
-                                    <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['hover']}>
+                                    <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['click']}>
                                         <a onClick={(e) => e.preventDefault()}>
                                             <Space>
                                                 <Avatar

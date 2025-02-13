@@ -1,6 +1,7 @@
 .header-container {
     .page-header {
         display            : flex;
+        justify-content    : space-between;
         user-select        : none;
         -webkit-user-select: none; // for Chromium
         -moz-user-select   : none; // for Firefox
@@ -16,9 +17,9 @@
         }
 
         &__top {
-            display      : flex; //when mobile screen
-            width        : 70%;
-            padding-right: 16px;
+            display         : flex; //when mobile screen
+            width           : 85%;
+            // padding-right: 16px;
 
             .page-header__logo {
                 display    : flex;
@@ -28,7 +29,7 @@
 
                 .logo {
                     display: block;
-                    color  : #61dafb;
+                    color  : #0a68ff;
                     cursor : pointer;
 
                     .icon-react {
@@ -71,7 +72,7 @@
                 }
 
                 .input-search {
-                    height       : 25px;
+                    height       : 40px;
                     outline      : none; // when typing is outline is none
                     padding      : 5px 30px;
                     border-radius: 6px;
@@ -82,7 +83,8 @@
         }
 
         &__bottom {
-            display: flex; // when mobile screen
+            display    : flex; // when mobile screen
+            white-space: nowrap; // fix link break (Đăng nhập) when md screen
 
             .navigation {
                 display: block;
@@ -103,14 +105,23 @@
                         font-size: 20px;
                         position : relative;
                         top      : 5px;
-                        color    : #61dafb;
+                        color    : #0a68ff;
                     }
                 }
             }
         }
     }
 
-    @media (max-width: 600px) {
+
+}
+
+@media (max-width: 540px) {
+    .header-container {
+        position  : sticky; //fixed header when scroll
+        top       : 0;
+        z-index   : 100;
+        background: white;
+
         .page-header {
             display: flex;
 
@@ -123,9 +134,9 @@
             }
 
             &__toggle {
-                display     : block;
-                font-size   : 2em;
-                margin-right: 15px;
+                display  : block;
+                font-size: 2em;
+                margin   : auto;
             }
 
             &__bottom {
@@ -154,4 +165,6 @@
             }
         }
     }
+
+
 }
