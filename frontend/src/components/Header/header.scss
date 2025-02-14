@@ -28,9 +28,10 @@
                 gap        : 10px;
 
                 .logo {
-                    display: block;
-                    color  : #0a68ff;
-                    cursor : pointer;
+                    display     : block;
+                    color       : #0a68ff;
+                    cursor      : pointer;
+                    padding-left: 10px; // when layout < 1200px
 
                     .icon-react {
                         font-size   : 30px;

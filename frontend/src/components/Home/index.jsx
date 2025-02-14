@@ -1,10 +1,22 @@
 import { Button, Checkbox, Col, Divider, Form, InputNumber, Pagination, Rate, Row, Tabs, Tag } from 'antd';
-import { FilterOutlined, ReloadOutlined } from '@ant-design/icons';
+import { FilterTwoTone, ReloadOutlined } from '@ant-design/icons';
+import { useEffect, useState } from 'react';
+import { getBookCategories, getListBooksWithPaginate } from '../../services/api';
 import './home.scss'
 
 const Home = () => {
-
     const [form] = Form.useForm()
+
+    const [listCategory, setListCategory] = useState([])
+
+    const [listBook, setListBook] = useState([])
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(false)
+
+    const [filterQuery, setFilterQuery] = useState('');
+    const [sortQuery, setSortQuery] = useState('&sort=-sold');
 
     const items = [
         {
@@ -29,6 +41,48 @@ const Home = () => {
         },
     ]
 
+    useEffect(() => {
+        const fetchListCategory = async () => {
+            const res = await getBookCategories();
+            if (res && res.data) {
+                let categoryFormatted = res.data.map(item => {
+                    return {
+                        value: item,
+                        label: item,
+                    }
+                })
+                setListCategory(categoryFormatted);
+            }
+        }
+
+        fetchListCategory();
+    }, [])
+
+    useEffect(() => {
+        fetchListBooks();
+    }, [current, pageSize, sortQuery, filterQuery])
+
+    const fetchListBooks = async () => {
+        let totalQuery = `current=${current}&pageSize=${pageSize}`;
+        setIsLoading(true);
+
+        if (filterQuery) {
+            totalQuery += filterQuery;
+        }
+
+        if (sortQuery) {
+            totalQuery += sortQuery;
+        }
+
+        const res = await getListBooksWithPaginate(totalQuery);
+        if (res && res.data) {
+            setListBook(res.data.result);
+            setTotal(res.data.meta.total)
+        }
+        setIsLoading(false);
+        console.log('>>> check total query: ', totalQuery);
+    }
+
     const handleChangeFilter = (changedValues, values) => {
         console.log(">>> check handleChangeFilter", changedValues, values)
     }
@@ -37,24 +91,48 @@ const Home = () => {
 
     }
 
-    const onChange = (key) => {
+    const onChangeTab = (key) => {
         console.log(key);
     };
+
+    const onChangePagination = (pagination) => {
+        if (pagination && pagination.current !== current) {
+            setCurrent(pagination.current);
+        }
+        if (pagination && pagination.pageSize !== pageSize) {
+            setPageSize(pagination.pageSize);
+            setCurrent(1);
+        }
+        console.log('>>> check pagination: ', pagination)
+    }
 
     return (
         <div className='homepage-container'>
             <Row style={{ marginLeft: 0, marginRight: 0 }}>
-                <Col
-                    xs={0} sm={0} md={4} lg={4} xl={4}
-                    style={{ border: '1px solid green' }}
-                >
+                <Col xs={0} sm={0} md={4} lg={4} xl={4}>
                     <div style={{ marginRight: '5px' }}>
-                        <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                            <span>
-                                <FilterOutlined /> Bộ lọc tìm kiếm
+                        <div
+                            className='search-filter-status'
+                            style={{
+                                display: 'flex', justifyContent: "space-between", textAlign: 'center',
+                                height: '2.8rem', lineHeight: '2.8rem'
+                            }}
+                        >
+                            <span style={{ display: 'flex' }}>
+                                <FilterTwoTone style={{ margin: 'auto 0.5rem auto 0' }} />
+                                <h2 style={{
+                                    fontSize: '1rem', textTransform: 'uppercase',
+                                    fontWeight: 500,
+                                    lineHeight: 1.2,
+                                    margin: 'auto',
+                                }}
+                                >
+                                    Bộ lọc tìm kiếm
+                                </h2>
                             </span>
-                            <ReloadOutlined title="Reset" onClick={() => form.resetFields()} />
+                            <ReloadOutlined title="Reset" onClick={() => form.resetFields()} style={{ margin: 'auto 0' }} />
                         </div>
+                        <Divider style={{ margin: '0 0 18px 0' }} />
                         <Form
                             form={form}
                             name="basic"
@@ -65,14 +143,17 @@ const Home = () => {
                             <Form.Item
                                 label="Danh mục sản phẩm"
                                 name="category"
-                            // rules={[{ required: true, message: 'Please input your username!' }]}
                             >
-                                <Checkbox.Group style={{ flexDirection: 'column' }}>
-                                    <Row><Checkbox value='Anh'>A</Checkbox></Row>
-                                    <Row><Checkbox value='B'>B</Checkbox></Row>
-                                    <Row><Checkbox value='C'>C</Checkbox></Row>
-                                    <Row><Checkbox value='D'>D</Checkbox></Row>
-                                    <Row><Checkbox value='E'>E</Checkbox></Row>
+                                <Checkbox.Group style={{ flexDirection: 'column', gap: '0.875rem' }}>
+                                    {listCategory?.map((category, index) => {
+                                        return (
+                                            <Row key={`${category}-${index}`}>
+                                                <Checkbox value={category.value}>
+                                                    {category.label}
+                                                </Checkbox>
+                                            </Row>
+                                        )
+                                    })}
                                 </Checkbox.Group>
                             </Form.Item>
                             <Divider />
@@ -80,32 +161,37 @@ const Home = () => {
                             <Form.Item
                                 label='Khoảng giá'
                             >
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}   >
-                                    <Form.Item
-                                        name={["range", 'from']}
-                                    >
-                                        <InputNumber
-                                            name='from'
-                                            min={0}
-                                            placeholder='đ Từ'
-                                            style={{ width: '5.3rem' }}
-                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                        />
-                                    </Form.Item>
-                                    <span>_</span>
-
-                                    <Form.Item
-                                        name={["range", 'to']}
-                                    >
-                                        <InputNumber
-                                            name='to'
-                                            min={0}
-                                            placeholder='đ Từ'
-                                            style={{ width: '5.3rem' }}
-                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                                        />
-                                    </Form.Item>
-                                </div>
+                                <Row gutter={[10, 10]}>
+                                    <Col lg={11} md={24}>
+                                        <Form.Item
+                                            name={["range", 'from']}
+                                        >
+                                            <InputNumber
+                                                name='from'
+                                                min={0}
+                                                placeholder='đ Từ'
+                                                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                    <Col lg={2} md={0}>
+                                        <div>-</div>
+                                    </Col>
+                                    <Col lg={11} md={24}>
+                                        <Form.Item
+                                            name={["range", 'to']}
+                                        >
+                                            <InputNumber
+                                                name='to'
+                                                min={0}
+                                                placeholder='đ Đến'
+                                                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                </Row>
                                 <div>
                                     <Button onClick={() => form.submit()}
                                         style={{ width: "100%" }} type='primary'>Áp dụng</Button>
@@ -141,364 +227,59 @@ const Home = () => {
                         </Form>
                     </div>
                 </Col>
-                <Col
-                    xs={24} sm={24} md={20} lg={20} xl={20}
-                    style={{ border: '1px solid red' }}
-                >
+                <Col xs={24} sm={24} md={20} lg={20} xl={20}>
                     <Row>
-                        <Tabs defaultActiveKey="1" onChange={onChange} items={items} />
+                        <Tabs
+                            defaultActiveKey="1"
+                            onChange={onChangeTab}
+                            items={items}
+                            style={{ overflowX: "auto" }}
+                        />
                     </Row>
-                    <Row>
-                        <div className='custom-row'>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
+                    <Row className='custom-row'>
+                        {listBook.map(book => {
+                            return (
+                                <div className='column' key={book._id}>
+                                    <div className='wrapper'>
+                                        <div className='thumbnail'>
+                                            <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book.thumbnail}`} alt="thumbnail book" />
                                         </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
+                                        <div className='details'>
+                                            <div className='text top-detail'>
+                                                <Tag className='tag-mall'>Mall</Tag>
+                                                {book.mainText}
+                                            </div>
+                                            <div className='bottom-detail'> {/* handle detail place at bottom */}
+                                                <div className='price'>
+                                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.price ?? 0)}
+                                                </div>
+                                                <div className='rating'>
+                                                    <Rate disabled defaultValue={5} style={{ fontSize: 8, paddingRight: 10 }} />
+                                                    <span>Đã bán {book.sold}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
+                            )
+                        })}
 
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='column'>
-                                <div className='wrapper'>
-                                    <div className='thumbnail'>
-                                        <img src='http://localhost:8080/images/book/1-5e81d7f66dada42752efb220d7b2956c.jpg' />
-                                    </div>
-                                    <div className='details'>
-                                        <div className='text'>
-                                            <Tag className='tag-mall'
-                                            >
-                                                Mall
-                                            </Tag>
-
-                                            Sách - Sách Nói Điện Tử Song Ngữ Anh - Việt cho trẻ em từ 1-7 tuổi
-                                        </div>
-                                        <div className='price'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(70000)}
-                                        </div>
-                                        <div className='rating'>
-                                            <Rate disabled defaultValue={5} style={{ fontSize: 10, paddingRight: 10 }} />
-                                            <span>Đã bán 1k</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </Row>
                     <Divider />
                     <Row>
                         <Pagination
-                            defaultCurrent={6}
-                            total={500}
+                            current={current}
+                            pageSize={pageSize}
+                            total={total}
                             // responsive
-                            style={{ margin: '0 auto 2rem auto' }} />
+                            showSizeChanger={true}
+                            onChange={(p, s) => onChangePagination({ current: p, pageSize: s })}
+                            style={{ margin: '0 auto 2rem auto' }}
+                        />
                     </Row>
                 </Col>
             </Row>
-        </div>
+        </div >
     )
 }
 

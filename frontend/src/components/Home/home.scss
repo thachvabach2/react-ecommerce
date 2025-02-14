@@ -14,12 +14,10 @@ body {
 }
 
 .homepage-container {
-    max-width  : var(--max-width);
-    margin     : auto;
-    padding-top: 15px;
-    border     : 1px solid black;
-
-
+    max-width   : var(--max-width);
+    margin      : auto;
+    padding-top : 15px;
+    padding-left: 10px; // when layout < 1200px
 
     .custom-row {
         display: grid;
@@ -29,6 +27,7 @@ body {
             isolation: isolate;
             margin   : 0.3125rem;
             border   : 1px solid #e7e7e7;
+            display  : flex; //1 (handle bottom-content)
 
             &:hover {
                 cursor    : pointer;
@@ -39,6 +38,8 @@ body {
 
             .wrapper {
                 background-color: white;
+                display         : flex; //2
+                flex-direction  : column; //2
 
                 .thumbnail {
                     img {
@@ -49,7 +50,11 @@ body {
                 }
 
                 .details {
-                    margin: 0.4rem;
+                    flex           : 1 1 0%; //3
+                    display        : flex; //3
+                    flex-direction : column; // 3
+                    justify-content: space-between; //3
+                    margin         : 0.4rem;
 
                     .text {
                         display           : -webkit-box;
@@ -57,6 +62,7 @@ body {
                         -webkit-box-orient: vertical;
                         line-clamp        : 2;
                         -webkit-line-clamp: 2;
+                        font-size         : 0.875rem;
 
                         .tag-mall {
                             padding-inline   : 0.2rem;
@@ -69,7 +75,10 @@ body {
                     }
 
                     .price {
-                        margin-top: 0.5rem;
+                        margin-top : 0.5rem;
+                        color      : #ff424e;
+                        font-weight: 500;
+                        font-size  : 1rem;
                     }
 
                     .rating {
@@ -82,14 +91,6 @@ body {
 }
 
 @media (width > 0px) {
-    .homepage-container {
-        // min-height: calc(100vh - 56px);
-
-        .ant-tabs-mobile {
-            width: 100%; //can scroll when outside
-        }
-    }
-
     .custom-row {
         grid-template-columns: repeat(2, 1fr);
     }
