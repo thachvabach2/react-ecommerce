@@ -67,7 +67,7 @@ export default function App() {
                     element: <ContactPage />
                 },
                 {
-                    path: "book",
+                    path: "book/:slug",
                     element: <BookPage />
                 },
             ],
