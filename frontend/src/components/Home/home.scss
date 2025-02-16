@@ -60,7 +60,7 @@
 
                     .price {
                         margin-top : 0.5rem;
-                        color      : #ff424e;
+                        color      : var(--price-color);
                         font-weight: 500;
                         font-size  : 1rem;
                     }

@@ -1,12 +1,16 @@
 @import "react-image-gallery/styles/scss/image-gallery.scss";
 
 .view-detail-book {
-    max-width       : var(--max-width);
-    margin          : 30px auto 0 auto;
-    background-color: #fff;
+    max-width : var(--max-width);
+    margin    : 30px auto 0 auto;
+    min-height: calc(-150px + 100vh); // may be remove this
 
     .card-detail {
+        background-color: #fff;
+        padding-bottom  : 25px; //for < md
+
         .left-content {
+            padding-top: 15px;
 
             .original-image,
             .thumbnail-image {
@@ -17,6 +21,141 @@
 
         .right-content {
             padding: 20px 10px 0 10px !important; // important for sm
+
+            .author {}
+
+            .title {
+                margin     : 5px 0;
+                font-size  : 20px;
+                font-weight: 300;
+
+                display           : -webkit-box;
+                text-overflow     : ellipsis;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                overflow          : hidden;
+            }
+
+            .rating {
+                display: flex;
+                margin : 10px 0;
+            }
+
+            .price {
+                margin-top    : 10px;
+                padding       : 15px 20px;
+                background    : #fafafa;
+                color         : var(--price-color);
+                // font-weight: 400px;
+
+                .currency {
+                    font-size: 30px;
+                }
+            }
+
+            .delivery {
+                margin: 25px 0;
+
+                span {
+                    &:nth-child(2n) {
+                        font-size: .815rem;
+                    }
+                }
+            }
+
+            .quantity {
+                display    : flex;
+                align-items: center;
+                margin     : 25px 0;
+
+                .right-side {
+                    display: flex;
+
+                    input {
+                        width        : 50px;
+                        height       : 32px;
+                        border-left  : 0;
+                        border-right : 0;
+                        font-size    : 16px;
+                        font-weight  : 400;
+                        box-sizing   : border-box;
+                        text-align   : center;
+                        cursor       : text;
+                        border-radius: 0;
+                        border       : 1px solid rgba(0, 0, 0, .09);
+                        outline      : none;
+                        color        : var(--brand-primary-color);
+                    }
+
+                    button {
+                        outline        : none;
+                        cursor         : pointer;
+                        font-size      : .875rem;
+                        font-weight    : 300;
+                        line-height    : 1;
+                        letter-spacing : 0;
+                        display        : flex;
+                        align-items    : center;
+                        justify-content: center;
+                        transition     : background-color .1s cubic-bezier(.4, 0, .6, 1);
+                        border         : 1px solid rgba(0, 0, 0, .09);
+                        border-radius  : 2px;
+                        background     : transparent;
+                        color          : rgba(0, 0, 0, .8);
+                        font-weight    : 300;
+                        width          : 32px;
+                        height         : 32px;
+                    }
+                }
+            }
+
+            .left-side {
+                color         : #757575;
+                width         : 110px;
+                text-transform: capitalize;
+                display       : inline-block;
+            }
+
+            .buy {
+                display: flex;
+
+                .cart {
+                    display     : flex;
+                    align-items : center;
+                    color       : var(--brand-primary-color);
+                    cursor      : pointer;
+                    margin-right: 15px;
+
+                    &:hover {
+                        background: rgba(196, 217, 237, .181);
+                    }
+
+                    .icon-cart {
+                        margin-right: 10px;
+                    }
+
+                    span {
+                        font-size: 14px;
+                    }
+                }
+
+                .now {
+                    cursor        : pointer;
+                    font-size     : 14px;
+                    background    : var(--brand-primary-color);
+                    color         : #fff;
+                    border        : none;
+                    text-transform: capitalize;
+                    outline       : 0;
+                    max-width     : 180px;
+                    flex-grow     : 1;
+
+
+                    &:hover {
+                        background-color: #5992ed;
+                    }
+                }
+            }
         }
     }
 }
