@@ -1,0 +1,73 @@
+@import "react-image-gallery/styles/scss/image-gallery.scss";
+
+.view-detail-book {
+    max-width       : var(--max-width);
+    margin          : 30px auto 0 auto;
+    background-color: #fff;
+
+    .card-detail {
+        .left-content {
+
+            .original-image,
+            .thumbnail-image {
+                cursor: pointer;
+            }
+
+        }
+
+        .right-content {
+            padding: 20px 10px 0 10px !important; // important for sm
+        }
+    }
+}
+
+.modal-gallery {
+    .active {
+        border        : 3px solid var(--brand-primary-color);
+        position      : absolute;
+        width         : 80px;
+        height        : 80px;
+        box-sizing    : border-box;
+        top           : 0;
+        pointer-events: none; // can hover on current which have class='active'
+    }
+
+    .img-normal {
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+}
+
+// custom modal gallery
+.ant-modal-content {
+    padding-left : 10px !important;
+    padding-right: 10px !important;
+}
+
+//custom border view detail thumbnail
+.image-gallery-thumbnails {
+    .image-gallery-thumbnails-container {
+        .thumbnail-image {
+            &:hover {
+                border: 4px solid #0a68ff;
+            }
+        }
+
+        button[aria-pressed="true"] {
+            border: 3px solid #0a68ff;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .view-detail-book {
+        .card-detail {
+            .right-content {
+                padding-top: 0px !important; // xóa padding top khi md screen
+            }
+        }
+    }
+}

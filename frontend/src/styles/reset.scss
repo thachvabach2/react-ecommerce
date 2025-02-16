@@ -1,8 +1,19 @@
+:root {
+    --max-width          : 1200px;
+    --brand-primary-color: #0a68ff;
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+}
+
 *,
 *::before,
 *::after {
-    padding: 0;
-    margin : 0;
+    padding   : 0;
+    margin    : 0;
+    box-sizing: border-box;
 }
 
 body,

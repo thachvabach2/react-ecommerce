@@ -1,22 +1,6 @@
-:root {
-    --max-width: 1200px;
-}
-
-* {
-    padding   : 0;
-    margin    : 0;
-    box-sizing: border-box;
-}
-
-html,
-body {
-    scroll-behavior: smooth;
-}
-
 .homepage-container {
     max-width   : var(--max-width);
-    margin      : auto;
-    padding-top : 15px;
+    margin      : 20px auto 0 auto;
     padding-left: 10px; // when layout < 1200px
 
     .custom-row {
@@ -69,7 +53,7 @@ body {
                             font-family      : "Trebuchet MS";
                             line-height      : 1rem;
                             margin-inline-end: 3px;
-                            background-color : #0a68ff;
+                            background-color : var(--brand-primary-color);
                             color            : #fff;
                         }
                     }
