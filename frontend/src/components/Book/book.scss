@@ -142,7 +142,7 @@
                 .now {
                     cursor        : pointer;
                     font-size     : 14px;
-                    background    : var(--brand-primary-color);
+                    background    : var(--price-color);
                     color         : #fff;
                     border        : none;
                     text-transform: capitalize;
@@ -152,7 +152,7 @@
 
 
                     &:hover {
-                        background-color: #5992ed;
+                        background: #f05d40;
                     }
                 }
             }
@@ -201,6 +201,12 @@
     }
 }
 
+// custom height gallery (care this)
+// .image-gallery-slide img {
+//     width : 100%;
+//     height: 350px;
+// }
+
 @media (max-width: 768px) {
     .view-detail-book {
         .card-detail {
@@ -209,4 +215,10 @@
             }
         }
     }
+}
+
+// no padding left right of image gallery
+.col-no-plr {
+    padding-left : 0px !important;
+    padding-right: 0px !important;
 }
