@@ -14,7 +14,7 @@ const Home = () => {
 
     const [listBook, setListBook] = useState([]);
     const [current, setCurrent] = useState(1);
-    const [pageSize, setPageSize] = useState(3);
+    const [pageSize, setPageSize] = useState(10);
     const [total, setTotal] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 

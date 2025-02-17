@@ -45,7 +45,7 @@ const ModalGallery = (props) => {
                         />
                     </Col>
                     <Col span={8}>
-                        <div>{title}</div>
+                        <div className='modal-title'>{title} từ lần đầu tiên ta đi bên</div>
                         <div>
                             <Row gutter={[20, 20]}>
                                 {items?.map((item, index) => {

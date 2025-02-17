@@ -8,78 +8,21 @@ import BookLoader from './BookLoader';
 import './book.scss'
 
 const ViewDetail = (props) => {
+    const { dataBook } = props;
+
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isLoading, setIsLoading] = useState(true);
 
-    const images = [
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1018/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1018/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1015/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1015/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-        {
-            original: 'https://picsum.photos/id/1019/1000/600/',
-            thumbnail: 'https://picsum.photos/id/1019/250/150/',
-            originalClass: "original-image",
-            thumbnailClass: "thumbnail-image"
-        },
-    ];
+    const images = dataBook?.images ?? [];
+
+    console.log('>>>> check dataBook: ', dataBook);
 
     return (
         <div className='view-detail-book'>
-            <Row gutter={[10, 10]}
-                style={{ border: '1px solid black' }}
-                className='card-detail'>
-                {isLoading === false ?
+            <Row gutter={[10, 10]} className='card-detail'>
+                {dataBook && dataBook._id ?
                     <>
-                        <Col md={10} sm={0} xs={0}
-                            className='left-content'
-                            style={{ border: '1px solid red' }}
-                        >
+                        <Col md={10} sm={0} xs={0} className='left-content' >
                             <ImageGallery
                                 items={images}
                                 showPlayButton={false}
@@ -88,13 +31,11 @@ const ViewDetail = (props) => {
                                 slideOnThumbnailOver={true}
                                 onSlide={(curr) => setCurrentIndex(curr)} //need
                                 onClick={() => setIsOpenModalGallery(true)}
-                                slideDuration={200}
+                                slideDuration={350}
                             // nếu rãnh add onThumbnailClick để mở modal cho giống shoppe
                             />
                         </Col>
-                        <Col md={14} sm={24}
-                            style={{ border: '1px solid green' }}
-                            className='right-content'>
+                        <Col md={14} sm={24} className='right-content'>
                             <Row gutter={[20, 20]} style={{ fontSize: 16 }}>
                                 {/* fix bug image xs */}
                                 <Col md={0} sm={24} xs={24} className='col-no-plr'>
@@ -107,18 +48,18 @@ const ViewDetail = (props) => {
                                     />
                                 </Col>
                                 <Col span={24}>
-                                    <div className='author'>Tác giả: <a>Jung book</a></div>
-                                    <div className='title'>How Psychology Works - Hiểu Hết Về Tâm Lý Học</div>
+                                    <div className='author'>Tác giả: <a>{dataBook?.author}</a></div>
+                                    <div className='title'>{dataBook?.mainText}</div>
                                     <div className='rating'>
                                         <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 12 }} />
                                         <span>
                                             <Divider type='vertical' />
-                                            <span className='sold'>Đã bán 27</span>
+                                            <span className='sold'>Đã bán {dataBook?.sold}</span>
                                         </span>
                                     </div>
                                     <div className='price'>
                                         <span className='currency'>
-                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(111111111)}
+                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(dataBook?.price ?? 0)}
                                         </span>
                                     </div>
                                     <div className='delivery'>
@@ -133,6 +74,7 @@ const ViewDetail = (props) => {
                                             <button><MinusOutlined /></button>
                                             <input defaultValue={1} />
                                             <button><PlusOutlined /></button>
+                                            <div className='available'>{dataBook?.quantity - dataBook?.sold} sản phẩm có sẵn</div>
                                         </span>
                                     </div>
                                     <div className='buy'>
@@ -158,7 +100,7 @@ const ViewDetail = (props) => {
                 setIsOpenModalGallery={setIsOpenModalGallery}
                 currentIndex={currentIndex}
                 items={images}
-                title={'hardcode'}
+                title={dataBook?.mainText}
             />
         </div>
     )
