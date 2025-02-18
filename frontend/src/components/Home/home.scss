@@ -14,10 +14,10 @@
             display  : flex; //1 (handle bottom-content)
 
             &:hover {
-                cursor    : pointer;
-                box-shadow: 0px 0px 20px 10px #706f6f3f;
-                border    : 1px solid #3b82f3;
-                transform : translateY(-1px);
+                cursor      : pointer;
+                box-shadow  : 0px 0px 0px 1px #706f6f3f;
+                border-color: var(--brand-primary-color);
+                transform   : translateY(-1px);
             }
 
             .wrapper {
