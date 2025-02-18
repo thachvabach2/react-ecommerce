@@ -1,4 +1,4 @@
-import { Col, Divider, Rate, Row } from 'antd';
+import { Col, Divider, notification, Rate, Row } from 'antd';
 import { useState } from 'react';
 import ImageGallery from "react-image-gallery";
 import ModalGallery from './ModalGallery';
@@ -6,14 +6,56 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { BsCartPlus } from "react-icons/bs";
 import BookLoader from './BookLoader';
 import './book.scss'
+import { useDispatch } from 'react-redux';
+import { doAddToCartAction } from '../../redux/order/orderSlice';
 
 const ViewDetail = (props) => {
     const { dataBook } = props;
+    const images = dataBook?.images ?? [];
+
+    const dispatch = useDispatch();
 
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const images = dataBook?.images ?? [];
+    const [currentQuantity, setCurrentQuantity] = useState(1);
+
+    const handleChangeInput = (value) => {
+        const re = /^[0-9\b]+$/;
+        if (value === '' || re.test(value)) {
+            if (+value <= dataBook?.quantity) {
+                setCurrentQuantity(+value);
+            } else {
+                setCurrentQuantity(dataBook?.quantity);
+            }
+        }
+    }
+
+    const handleChangeButton = (type) => {
+        if (type === 'MINUS') {
+            if (currentQuantity - 1 <= 0) return
+            setCurrentQuantity(currentQuantity - 1);
+
+        }
+        if (type === 'PLUS') {
+            if (currentQuantity === +dataBook?.quantity) return;
+            setCurrentQuantity(currentQuantity + 1);
+        }
+    }
+
+    const handleAddToCart = () => {
+        if (currentQuantity > 0) {
+            dispatch(doAddToCartAction({
+                quantity: currentQuantity,
+                detail: dataBook,
+                _id: dataBook._id,
+            }));
+        } else {
+            notification.error({
+                message: 'Số lượng phải lớn hơn 0!'
+            })
+        }
+    }
 
     console.log('>>>> check dataBook: ', dataBook);
 
@@ -71,14 +113,20 @@ const ViewDetail = (props) => {
                                     <div className='quantity'>
                                         <span className='left-side'>Số lượng</span>
                                         <span className='right-side'>
-                                            <button><MinusOutlined /></button>
-                                            <input defaultValue={1} />
-                                            <button><PlusOutlined /></button>
-                                            <div className='available'>{dataBook?.quantity - dataBook?.sold} sản phẩm có sẵn</div>
+                                            <button onClick={() => handleChangeButton('MINUS')}><MinusOutlined /></button>
+                                            <input
+                                                value={currentQuantity}
+                                                onChange={(e) => handleChangeInput(e.target.value)}
+                                            />
+                                            <button onClick={() => handleChangeButton('PLUS')}><PlusOutlined /></button>
+                                            <div className='available'>{dataBook?.quantity} sản phẩm có sẵn</div>
                                         </span>
                                     </div>
                                     <div className='buy'>
-                                        <button className='cart btn btn-tinted'>
+                                        <button
+                                            className='cart btn btn-tinted'
+                                            onClick={() => handleAddToCart()}
+                                        >
                                             <BsCartPlus className='icon-cart' size={20} />
                                             <span>Thêm vào giỏ hàng</span>
                                         </button>
