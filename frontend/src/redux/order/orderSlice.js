@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { message } from 'antd';
 
 const initialState = {
     carts: []
@@ -23,6 +24,7 @@ export const orderSlice = createSlice({
             }
             // update redux
             state.carts = carts;
+            message.success('Sản phẩm đã đươc thêm vào giỏ hàng')
         }
     },
     extraReducers: (builder) => {

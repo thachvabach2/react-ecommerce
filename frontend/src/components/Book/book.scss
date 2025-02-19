@@ -129,11 +129,12 @@
                 margin-top: 5px;
 
                 .cart {
-                    display     : flex;
-                    align-items : center;
-                    color       : var(--brand-primary-color);
-                    cursor      : pointer;
-                    margin-right: 15px;
+                    display      : flex;
+                    align-items  : center;
+                    color        : var(--brand-primary-color);
+                    border-radius: 2px;
+                    cursor       : pointer;
+                    margin-right : 15px;
 
                     &:hover {
                         background: rgba(196, 217, 237, .181);

@@ -1,0 +1,115 @@
+:root {
+    --max-width                : 1200px;
+    --brand-primary-color      : #0a68ff;
+    --brand-primary-light-color: rgba(25, 114, 248, 0.1);
+    --price-color              : #ff424e;
+}
+
+body,
+html {
+    // overflow-x         : hidden; //hide scroll bar(Ox)
+    font-family     : Helvetica Neue, Helvetica, Arial, 文泉驛正黑, WenQuanYi Zen Hei, Hiragino Sans GB, 儷黑 Pro, LiHei Pro, Heiti TC, 微軟正黑體, Microsoft JhengHei UI, Microsoft JhengHei, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.btn {
+    font-size     : 16px;
+    height        : 48px;
+    padding       : 0 20px;
+    border-radius : 2px;
+    text-transform: capitalize;
+}
+
+.btn-tinted {
+    background: var(--brand-primary-light-color);
+    border    : 1px solid var(--brand-primary-color);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .03);
+    outline   : 0;
+    overflow  : visible;
+}
+
+.popover-carts {
+    // max-width: 450px;
+    width: 450px;
+
+    .pop-header {
+        color         : rgba(0, 0, 0, .5);
+        font-weight   : 400;
+        text-transform: capitalize;
+    }
+
+    .pop-cart-content {
+
+        .book {
+            display: flex;
+            padding: 10px 0;
+
+            &:hover {
+                background-color: #f8f8f8;
+            }
+
+            .thumbnail {
+                img {
+                    width     : 40px;
+                    height    : 40px;
+                    object-fit: cover; // cắt ảnh cho phù hợp -> k crop
+
+                    // https://stackoverflow.com/questions/55678091/how-to-get-rid-of-default-margin-around-image-inside-a-div
+                    display: block; // to fit with div
+                }
+            }
+
+            .right-content {
+                flex           : 1;
+                margin-left    : 9px;
+                display        : flex;
+                justify-content: space-between;
+                overflow       : hidden;
+                font-family    : sans-serif;
+
+                .title {
+                    white-space  : nowrap;
+                    overflow     : hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .price {
+                    flex-shrink: 0;
+                    margin-left: 15px;
+                    color      : var(--price-color);
+                }
+            }
+        }
+    }
+
+    .pop-cart-footer {
+        display        : flex;
+        justify-content: space-between;
+        align-items    : center;
+        padding-top    : .625rem;
+        text-transform : capitalize;
+
+        .items-count {
+            font-size     : .85rem;
+            text-transform: capitalize;
+        }
+
+        .btn-solid-primary {
+            font-size       : 14px;
+            height          : 34px;
+            padding         : 0 15px;
+            background-color: var(--brand-primary-color);
+            color           : #fff;
+            border          : 0;
+            border-radius   : 2px;
+            outline         : 0;
+            text-transform  : capitalize;
+
+            &:hover {
+                cursor          : pointer;
+                background-color: #3e7ee4;
+            }
+        }
+
+    }
+}

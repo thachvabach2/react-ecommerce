@@ -22,6 +22,7 @@ import LayoutAdmin from './components/Admin/LayoutAdmin';
 import ManageUser from './pages/admin/user';
 import BookTable from './components/Admin/Book/BookTable';
 import './styles/reset.scss'
+import './styles/global.scss'
 
 
 const Layout = () => {

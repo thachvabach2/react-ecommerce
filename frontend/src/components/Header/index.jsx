@@ -1,4 +1,4 @@
-import { Avatar, Divider, Dropdown, message, Space } from 'antd';
+import { Avatar, Divider, Dropdown, message, Popover, Space } from 'antd';
 import { FaReact } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
@@ -16,6 +16,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
     const user = useSelector(state => state.account.user);
+    const carts = useSelector(state => state.order.carts);
 
     const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -44,6 +45,34 @@ const Header = () => {
             label: <Link to='/admin'>Trang quản trị</Link>,
             key: 'admin',
         },)
+    }
+
+    const renderContentPopover = () => {
+        return (
+            <>
+                <div className='pop-cart-content'>
+                    {carts?.map((book, index) => {
+                        return (
+                            <div className='book' key={`book-${index}`}>
+                                <div className='thumbnail'>
+                                    <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
+                                </div>
+                                <div className='right-content'>
+                                    <div className='title'>{book?.detail?.mainText}</div>
+                                    <div className='price'>
+                                        ₫{new Intl.NumberFormat('vi-VN').format(book?.detail?.price ?? 0)}
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+                <div className='pop-cart-footer'>
+                    <span className='items-count'>{carts?.length ?? 0} thêm hàng vào giỏ</span>
+                    <button className='btn-solid-primary'>Xem giỏ hàng</button>
+                </div>
+            </>
+        )
     }
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
@@ -76,9 +105,24 @@ const Header = () => {
                     <nav className='page-header__bottom'>
                         <ul id='navigation' className='navigation'>
                             <li className='navigation__item'>
-                                <Badge size="small" count={5}>
-                                    <FiShoppingCart className='icon-cart' />
-                                </Badge>
+                                <Popover
+                                    rootClassName='popover-carts'
+                                    overlayClassName=''
+                                    placement='bottomRight'
+                                    title={<span className='pop-header'>Sản phẩm mới thêm</span>}
+                                    content={() => renderContentPopover()}
+                                    trigger="hover"
+                                >
+                                    <div style={{ height: 45 }}>
+                                        <Badge
+                                            size="small"
+                                            count={carts?.length ?? 0}
+                                            showZero
+                                        >
+                                            <FiShoppingCart className='icon-cart' />
+                                        </Badge>
+                                    </div>
+                                </Popover>
                             </li>
                             <li className='navigation__item mobile'>
                                 <Divider type='vertical' />
