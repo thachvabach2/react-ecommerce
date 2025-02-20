@@ -69,7 +69,12 @@ const Header = () => {
                 </div>
                 <div className='pop-cart-footer'>
                     <span className='items-count'>{carts?.length ?? 0} thêm hàng vào giỏ</span>
-                    <button className='btn-solid-primary'>Xem giỏ hàng</button>
+                    <button
+                        className='btn-solid-primary'
+                        onClick={() => navigate('/order')}
+                    >
+                        Xem giỏ hàng
+                    </button>
                 </div>
             </>
         )
@@ -89,8 +94,10 @@ const Header = () => {
                             ☰
                         </div>
                         <div className='page-header__logo'>
-                            <span className='logo' onClick={() => navigate('/')}>
-                                <FaReact className='rotate icon-react' /> ITZuiZẻ
+                            <span className='logo'>
+                                <span onClick={() => navigate('/')}>
+                                    <FaReact className='rotate icon-react' /> Shoppe
+                                </span>
                                 <IoIosSearch className='icon-search' />
                             </span>
 
@@ -113,13 +120,16 @@ const Header = () => {
                                     content={() => renderContentPopover()}
                                     trigger="hover"
                                 >
-                                    <div style={{ height: 45 }}>
+                                    <div style={{ height: 46 }}>
                                         <Badge
                                             size="small"
                                             count={carts?.length ?? 0}
                                             showZero
                                         >
-                                            <FiShoppingCart className='icon-cart' />
+                                            <FiShoppingCart
+                                                className='icon-cart'
+                                                onClick={() => navigate('/order')}
+                                            />
                                         </Badge>
                                     </div>
                                 </Popover>

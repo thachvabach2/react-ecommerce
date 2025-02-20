@@ -1,0 +1,444 @@
+.order-container {
+    max-width: var(--max-width);
+    font-size: 0.875rem;
+    margin   : 0 auto 15px auto;
+
+    .order-body {
+        min-height : calc(-139px + 100vh); // for footer bottom when few items
+        padding-top: 20px;
+
+        .header {
+            background-color: #fff;
+            margin-bottom   : 12px;
+            padding         : 0 20px;
+            height          : 55px;
+
+            display        : flex;
+            justify-content: space-between;
+            align-items    : center;
+
+            .product,
+            .left-header {
+                display    : flex;
+                align-items: center;
+                width      : 47%;
+
+                .header-checkbox {
+                    padding: 0 12px 0 10px;
+                }
+
+                .text {}
+            }
+
+            .right-header {
+                display        : flex;
+                justify-content: space-between;
+                flex-grow      : 1;
+
+                color         : #888;
+                text-transform: capitalize;
+
+                .price {
+                    width     : 25%;
+                    text-align: center;
+                }
+
+                .quantity {
+                    width     : 30%;
+                    text-align: center;
+                }
+
+                .total {
+                    width     : 20%;
+                    text-align: center;
+                }
+
+                .action {
+                    width     : 15%;
+                    text-align: center;
+                }
+            }
+
+        }
+
+        .content {
+            background-color: #fff;
+            margin-bottom   : .9375rem;
+            padding         : 22px 20px;
+
+            .order-detail {
+                display    : flex;
+                align-items: center;
+
+                .checkbox {
+                    padding: 0 12px 0 10px;
+                }
+
+                .thumbnail {
+                    img {
+                        width     : 80px;
+                        height    : 80px;
+                        object-fit: cover;
+                        display   : block;
+                    }
+                }
+
+                .right-content {
+                    display    : flex;
+                    flex-grow  : 1;
+                    align-items: center;
+
+                    .right-content-start {
+                        margin-right: 10px;
+                        width       : 40%;
+
+                        .title {
+                            padding-left: 10px;
+                        }
+                    }
+
+                    .right-content-end {
+                        display        : flex;
+                        flex           : 1;
+                        justify-content: space-between;
+                        align-items    : center;
+
+                        .price {
+                            display        : flex;
+                            justify-content: center;
+                            text-align     : center;
+                            width          : 25%;
+                        }
+
+                        .quantity {
+                            width: 30%;
+
+                            .quantity-main {
+                                display        : flex;
+                                align-items    : center;
+                                justify-content: center;
+
+                                input {
+                                    width        : 50px;
+                                    height       : 32px;
+                                    border-left  : 0;
+                                    border-right : 0;
+                                    font-size    : 16px;
+                                    font-weight  : 400;
+                                    box-sizing   : border-box;
+                                    text-align   : center;
+                                    cursor       : text;
+                                    border-radius: 0;
+                                    border       : 1px solid rgba(0, 0, 0, .09);
+                                    outline      : none;
+                                    color        : var(--brand-primary-color);
+                                }
+
+                                button {
+                                    outline        : none;
+                                    cursor         : pointer;
+                                    font-size      : .875rem;
+                                    font-weight    : 300;
+                                    line-height    : 1;
+                                    letter-spacing : 0;
+                                    display        : flex;
+                                    align-items    : center;
+                                    justify-content: center;
+                                    transition     : background-color .1s cubic-bezier(.4, 0, .6, 1);
+                                    border         : 1px solid rgba(0, 0, 0, .09);
+                                    border-radius  : 2px;
+                                    background     : transparent;
+                                    color          : rgba(0, 0, 0, .8);
+                                    font-weight    : 300;
+                                    width          : 32px;
+                                    height         : 32px;
+                                }
+                            }
+                        }
+
+                        .total {
+                            color          : #ee4d2d;
+                            width          : 20%;
+                            display        : flex;
+                            justify-content: center;
+                        }
+
+                        .delete {
+                            width         : 15%;
+                            text-align    : center;
+                            display       : flex;
+                            flex-direction: column;
+
+                            .delete-button {
+                                background: none;
+                                border    : 0;
+
+                                span {
+                                    cursor: pointer;
+
+                                    &:hover {
+                                        color: red;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .order-footer {
+        font-size: 1rem;
+
+        display        : flex;
+        justify-content: space-between;
+        align-items    : center;
+
+        margin-top: 0.75rem;
+        padding   : 12px 10px;
+        box-shadow: 0 -10px 20px 0px #dadadade;
+
+        position        : sticky;
+        z-index         : 100;
+        background-color: #fff;
+        bottom          : 0;
+
+        .left-footer {
+            display    : flex;
+            align-items: center;
+
+            .select-all-checkbox {
+                padding-right: 12px;
+            }
+
+            .select-all-text {}
+        }
+
+        .right-footer {
+            display    : flex;
+            align-items: center;
+
+            .total {
+                display    : flex;
+                align-items: center;
+
+                .total-text {}
+
+                .total-price {
+                    margin-left: 10px;
+                    font-size  : 24px;
+                    color      : var(--price-color);
+                }
+            }
+
+            .buy-product {
+                margin-left     : 10px;
+                padding         : 0 80px;
+                background-color: var(--price-color);
+                cursor          : pointer;
+                font-size       : 14px;
+                color           : #fff;
+                border          : none;
+                text-transform  : capitalize;
+                outline         : 0;
+
+                &:hover {
+                    background: #f5525c;
+                }
+            }
+        }
+    }
+
+    @media (max-heigh: 100vh) {
+        .order-footer {
+            position: absolute;
+        }
+    }
+}
+
+._9G37m {
+    border       : 1px solid rgba(0, 0, 0, .09);
+    border-radius: 2px;
+}
+
+.kEMRam {
+    padding: 16px 0;
+}
+
+@media (max-width: 700px) {
+    .order-container {
+        .order-body {
+            min-height: calc(-118px + 100vh); // for footer bottom when few items
+
+            .header {
+                display: none;
+            }
+
+            .content {
+                padding: 0;
+
+                .order-detail {
+                    .checkbox {
+                        padding-left: 0;
+                    }
+
+                    .thumbnail {
+                        align-self: self-start;
+
+                        img {}
+                    }
+
+                    .right-content {
+                        align-self     : stretch;
+                        display        : flex;
+                        flex-direction : column;
+                        align-items    : start;
+                        margin-left    : .625rem;
+                        justify-content: space-between;
+
+                        .right-content-start {
+                            width       : initial;
+                            margin-right: 0;
+
+                            .title {
+                                padding-left: 0;
+
+                                display           : -webkit-box;
+                                text-overflow     : ellipsis;
+                                -webkit-box-orient: vertical;
+                                -webkit-line-clamp: 1;
+                                overflow          : hidden;
+                            }
+                        }
+
+                        .right-content-end {
+                            flex: none;
+
+                            display        : flex;
+                            flex-direction : row;
+                            align-self     : stretch;
+                            justify-content: space-between;
+                            align-items    : center;
+
+
+                            .price {
+                                width    : initial;
+                                font-size: 1rem;
+                                color    : red;
+                            }
+
+                            .quantity {
+                                width: initial;
+
+                                .quantity-main {
+                                    display        : flex;
+                                    align-items    : center;
+                                    justify-content: center;
+
+                                    input {
+                                        width        : 50px;
+                                        height       : 32px;
+                                        border-left  : 0;
+                                        border-right : 0;
+                                        font-size    : 16px;
+                                        font-weight  : 400;
+                                        box-sizing   : border-box;
+                                        text-align   : center;
+                                        cursor       : text;
+                                        border-radius: 0;
+                                        border       : 1px solid rgba(0, 0, 0, .09);
+                                        outline      : none;
+                                        color        : var(--brand-primary-color);
+                                    }
+
+                                    button {
+                                        outline        : none;
+                                        cursor         : pointer;
+                                        font-size      : .875rem;
+                                        font-weight    : 300;
+                                        line-height    : 1;
+                                        letter-spacing : 0;
+                                        display        : flex;
+                                        align-items    : center;
+                                        justify-content: center;
+                                        transition     : background-color .1s cubic-bezier(.4, 0, .6, 1);
+                                        border         : 1px solid rgba(0, 0, 0, .09);
+                                        border-radius  : 2px;
+                                        background     : transparent;
+                                        color          : rgba(0, 0, 0, .8);
+                                        font-weight    : 300;
+                                        width          : 32px;
+                                        height         : 32px;
+                                    }
+                                }
+                            }
+
+                            .total {
+                                width  : initial;
+                                display: none;
+                            }
+
+                            .delete {
+                                width  : initial;
+                                display: none;
+
+                                .delete-button {
+
+                                    span {}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .order-footer {
+            padding: 0.5rem;
+
+            .left-footer {
+                .select-all-checkbox {}
+
+                .select-all-text {
+                    font-size: 12px;
+                }
+            }
+
+            .right-footer {
+                .total {
+                    .total-text {
+                        font-size: 14px;
+                    }
+
+                    .total-price {
+                        font-size  : 16px;
+                        margin-left: 2px;
+                    }
+                }
+
+                .buy-product {
+                    font-size    : 14px;
+                    padding      : 8px 10px !important;
+                    height       : initial;
+                    border       : 1px solid rgba(0, 0, 0, .26);
+                    border-radius: 4px;
+                }
+            }
+        }
+    }
+
+    ._9G37m {
+        margin : 0;
+        padding: .75rem;
+        border : 0;
+    }
+
+    .kEMRam {
+        padding: 0;
+    }
+}
+
+// footer {
+//     display: none;
+// }

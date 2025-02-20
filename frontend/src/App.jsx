@@ -21,9 +21,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import ManageUser from './pages/admin/user';
 import BookTable from './components/Admin/Book/BookTable';
+import OrderPage from './pages/order';
 import './styles/reset.scss'
 import './styles/global.scss'
-
 
 const Layout = () => {
     return (
@@ -70,6 +70,10 @@ export default function App() {
                 {
                     path: "book/:slug",
                     element: <BookPage />
+                },
+                {
+                    path: "order",
+                    element: <OrderPage />
                 },
             ],
         },
