@@ -25,14 +25,25 @@ export const orderSlice = createSlice({
             // update redux
             state.carts = carts;
             message.success('Sản phẩm đã đươc thêm vào giỏ hàng')
-        }
-    },
-    extraReducers: (builder) => {
+        },
+        doUpdateCartAction: (state, action) => {
+            let carts = state.carts;
+            const payload = action.payload;
+            console.log('>>> check payload: ', payload)
 
-    },
+            carts[payload.index].quantity = payload.value;
+        },
+        doDeleteItemCartAction: (state, action) => {
+            const bookId = action.payload.bookId;
+            state.carts = state.carts.filter(item => item._id !== bookId);
+        },
+        extraReducers: (builder) => {
+
+        },
+    }
 })
 
 // Action creators are generated for each case reducer function
-export const { doAddToCartAction } = orderSlice.actions
+export const { doAddToCartAction, doUpdateCartAction, doDeleteItemCartAction } = orderSlice.actions
 
 export default orderSlice.reducer

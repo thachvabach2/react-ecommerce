@@ -1,15 +1,75 @@
 import { Checkbox } from 'antd';
-import './order.scss'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { doDeleteItemCartAction, doUpdateCartAction } from '../../redux/order/orderSlice';
+import { useEffect, useState } from 'react';
+import './order.scss'
 
 const ViewOrder = () => {
+    const dispatch = useDispatch();
+    const carts = useSelector(state => state.order.carts);
+
+    const [totalPrice, setTotalPrice] = useState(0)
+
+    useEffect(() => {
+        if (carts && carts.length > 0) {
+            let sum = 0
+            carts?.forEach(item => {
+                sum += item.quantity * item.detail.price;
+            })
+            setTotalPrice(sum);
+        } else {
+            setTotalPrice(0);
+        }
+    }, [carts])
+
+    const handleChangeInput = (value, index) => {
+        const re = /^[0-9\b]+$/;
+        if (value === '' || re.test(value)) {
+            let realValue = value;
+            if (value === '' || value === '0') {
+                realValue = 1;
+            }
+            else {
+                if (+value <= carts[index]?.detail?.quantity) {
+                    realValue = +value;
+                } else {
+                    realValue = carts[index]?.detail?.quantity;
+                }
+            }
+            dispatch(doUpdateCartAction({
+                index: index,
+                value: realValue,
+            }));
+        }
+    }
+
+    const handleChangeButton = (type, index) => {
+        let value = 0;
+        if (type === 'MINUS') {
+            if (carts[index].quantity - 1 <= 0) return;
+            value = carts[index].quantity - 1;
+        }
+        if (type === 'PLUS') {
+            if (carts[index].quantity === +carts[index]?.detail.quantity) return;
+            value = carts[index].quantity + 1;
+        }
+        dispatch(doUpdateCartAction({
+            index, value
+        }));
+    }
+
+    const handleDeleteOrder = (bookId) => {
+        dispatch(doDeleteItemCartAction({ bookId }));
+    }
+
     return (
         <div className='order-container'>
             <main className='order-body'>
                 <div className='header'>
                     <div className='product left-header'>
                         <div className='header-checkbox'>
-                            <Checkbox />
+                            <Checkbox checked />
                         </div>
                         <div className='text'>
                             Sản phẩm
@@ -30,167 +90,72 @@ const ViewOrder = () => {
                         </div>
                     </div>
                 </div>
-                <section className='content'>
-                    <div className='_9G37m'>
-                        <div className='kEMRam'>
-                            <div className='order-detail'>
-                                <div className='checkbox'>
-                                    <Checkbox />
-                                </div>
-                                <div className='thumbnail'>
-                                    <img src='https://tse4.mm.bing.net/th?id=OIP.54-OfDJtPnzc8FPVj0lFQgHaE7&pid=Api&P=0&h=220' />
-                                </div>
-                                <div className='right-content'>
-                                    <div className='right-content-start'>
-                                        <div className='title'>
-                                            Máy xay sinh tố đa năng 350W Sunhouse, Chính
+
+                {carts?.map((book, index) => {
+                    const detail = book?.detail;
+                    return (
+                        <section className='content' key={`book-${index}`}>
+                            <div className='_9G37m'>
+                                <div className='kEMRam'>
+                                    <div className='order-detail'>
+                                        <div className='checkbox'>
+                                            <Checkbox checked />
                                         </div>
-                                    </div>
-                                    <div className='right-content-end'>
-                                        <div className='price'>
-                                            <span>₫12.000</span>
+                                        <div className='thumbnail'>
+                                            <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${detail?.thumbnail}`} />
                                         </div>
-                                        <div className='quantity'>
-                                            <span className='quantity-main'>
-                                                <button><MinusOutlined /></button>
-                                                <input defaultValue={1} />
-                                                <button><PlusOutlined /></button>
-                                            </span>
-                                        </div>
-                                        <div className='total'>
-                                            <span>₫24.000</span>
-                                        </div>
-                                        <div className='delete'>
-                                            <button className='delete-button'><span>Xóa</span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className='content'>
-                    <div className='_9G37m'>
-                        <div className='kEMRam'>
-                            <div className='order-detail'>
-                                <div className='checkbox'>
-                                    <Checkbox />
-                                </div>
-                                <div className='thumbnail'>
-                                    <img src='https://tse4.mm.bing.net/th?id=OIP.54-OfDJtPnzc8FPVj0lFQgHaE7&pid=Api&P=0&h=220' />
-                                </div>
-                                <div className='right-content'>
-                                    <div className='right-content-start'>
-                                        <div className='title'>
-                                            Máy xay sinh tố đa năng 350W Sunhouse, Chính
-                                        </div>
-                                    </div>
-                                    <div className='right-content-end'>
-                                        <div className='price'>
-                                            <span>₫12.000</span>
-                                        </div>
-                                        <div className='quantity'>
-                                            <span className='quantity-main'>
-                                                <button><MinusOutlined /></button>
-                                                <input defaultValue={1} />
-                                                <button><PlusOutlined /></button>
-                                            </span>
-                                        </div>
-                                        <div className='total'>
-                                            <span>₫24.000</span>
-                                        </div>
-                                        <div className='delete'>
-                                            <button className='delete-button'><span>Xóa</span></button>
+                                        <div className='right-content'>
+                                            <div className='right-content-start'>
+                                                <div className='title'>
+                                                    {detail?.mainText}
+                                                </div>
+                                            </div>
+                                            <div className='right-content-end'>
+                                                <div className='price'>
+                                                    <span>
+                                                        ₫{new Intl.NumberFormat('vi-VN').format(detail?.price ?? 0)}
+                                                    </span>
+                                                </div>
+                                                <div className='quantity'>
+                                                    <span className='quantity-main'>
+                                                        <button onClick={() => handleChangeButton('MINUS', index)}>
+                                                            <MinusOutlined className='custom-minus-plus' />
+                                                        </button>
+                                                        <input
+                                                            value={book.quantity}
+                                                            onChange={(e) => handleChangeInput(e.target.value, index)}
+                                                        />
+                                                        <button onClick={() => handleChangeButton('PLUS', index)}>
+                                                            <PlusOutlined className='custom-minus-plus' />
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                                <div className='total'>
+                                                    <span>
+                                                        ₫{new Intl.NumberFormat('vi-VN').format((+detail?.price ?? 0) * +book?.quantity)}
+                                                    </span>
+                                                </div>
+                                                <div className='delete'>
+                                                    <button
+                                                        className='delete-button'
+                                                        onClick={() => handleDeleteOrder(book._id)}
+                                                    >
+                                                        <span>Xóa</span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-                <section className='content'>
-                    <div className='_9G37m'>
-                        <div className='kEMRam'>
-                            <div className='order-detail'>
-                                <div className='checkbox'>
-                                    <Checkbox />
-                                </div>
-                                <div className='thumbnail'>
-                                    <img src='https://tse4.mm.bing.net/th?id=OIP.54-OfDJtPnzc8FPVj0lFQgHaE7&pid=Api&P=0&h=220' />
-                                </div>
-                                <div className='right-content'>
-                                    <div className='right-content-start'>
-                                        <div className='title'>
-                                            Máy xay sinh tố đa năng 350W Sunhouse, Chính
-                                        </div>
-                                    </div>
-                                    <div className='right-content-end'>
-                                        <div className='price'>
-                                            <span>₫12.000</span>
-                                        </div>
-                                        <div className='quantity'>
-                                            <span className='quantity-main'>
-                                                <button><MinusOutlined /></button>
-                                                <input defaultValue={1} />
-                                                <button><PlusOutlined /></button>
-                                            </span>
-                                        </div>
-                                        <div className='total'>
-                                            <span>₫24.000</span>
-                                        </div>
-                                        <div className='delete'>
-                                            <button className='delete-button'><span>Xóa</span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <section className='content'>
-                    <div className='_9G37m'>
-                        <div className='kEMRam'>
-                            <div className='order-detail'>
-                                <div className='checkbox'>
-                                    <Checkbox />
-                                </div>
-                                <div className='thumbnail'>
-                                    <img src='https://tse4.mm.bing.net/th?id=OIP.54-OfDJtPnzc8FPVj0lFQgHaE7&pid=Api&P=0&h=220' />
-                                </div>
-                                <div className='right-content'>
-                                    <div className='right-content-start'>
-                                        <div className='title'>
-                                            Máy xay sinh tố đa năng 350W Sunhouse, Chính
-                                        </div>
-                                    </div>
-                                    <div className='right-content-end'>
-                                        <div className='price'>
-                                            <span>₫12.000</span>
-                                        </div>
-                                        <div className='quantity'>
-                                            <span className='quantity-main'>
-                                                <button><MinusOutlined /></button>
-                                                <input defaultValue={1} />
-                                                <button><PlusOutlined /></button>
-                                            </span>
-                                        </div>
-                                        <div className='total'>
-                                            <span>₫24.000</span>
-                                        </div>
-                                        <div className='delete'>
-                                            <button className='delete-button'><span>Xóa</span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                        </section>
+                    )
+                })}
             </main>
             <section className='order-footer'>
                 <div className='left-footer'>
                     <div className='select-all-checkbox'>
-                        <Checkbox />
+                        <Checkbox checked />
                     </div>
                     <div className='select-all-text'>
                         Chọn tất cả
@@ -202,11 +167,11 @@ const ViewOrder = () => {
                             Tổng số tiền:
                         </div>
                         <div className='total-price'>
-                            đ0
+                            ₫{new Intl.NumberFormat('vi-VN').format(totalPrice)}
                         </div>
                     </div>
                     <button className='buy-product btn'>
-                        Mua hàng
+                        Mua hàng ({carts?.length ?? 0})
                     </button>
                 </div>
             </section>

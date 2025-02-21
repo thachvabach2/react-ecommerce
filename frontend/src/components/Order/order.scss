@@ -131,7 +131,6 @@
                                     border-radius: 0;
                                     border       : 1px solid rgba(0, 0, 0, .09);
                                     outline      : none;
-                                    color        : var(--brand-primary-color);
                                 }
 
                                 button {
@@ -152,6 +151,10 @@
                                     font-weight    : 300;
                                     width          : 32px;
                                     height         : 32px;
+
+                                    .custom-minus-plus {
+                                        color: rgba(0, 0, 0, .7);
+                                    }
                                 }
                             }
                         }

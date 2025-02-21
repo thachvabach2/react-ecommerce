@@ -142,7 +142,7 @@ const Header = () => {
                                     <span onClick={() => navigate('/login')}>Đăng nhập</span>
                                     :
                                     <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['click']}>
-                                        <a onClick={(e) => e.preventDefault()}>
+                                        <a onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
                                             <Space>
                                                 <Avatar
                                                     src={urlAvatar}
