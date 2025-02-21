@@ -5,15 +5,18 @@ import ModalGallery from './ModalGallery';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { BsCartPlus } from "react-icons/bs";
 import BookLoader from './BookLoader';
-import './book.scss'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { doAddToCartAction } from '../../redux/order/orderSlice';
+import { useNavigate } from 'react-router-dom';
+import './book.scss'
 
 const ViewDetail = (props) => {
     const { dataBook } = props;
     const images = dataBook?.images ?? [];
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isAuthenticated = useSelector(state => state.account.isAuthenticated);
 
     const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -44,6 +47,14 @@ const ViewDetail = (props) => {
     }
 
     const handleAddToCart = () => {
+        if (isAuthenticated === false) {
+            navigate('/login');
+            notification.error({
+                message: 'Đăng nhập để thêm vào giỏ'
+            })
+            return;
+        }
+
         if (currentQuantity > 0) {
             dispatch(doAddToCartAction({
                 quantity: currentQuantity,
@@ -56,8 +67,6 @@ const ViewDetail = (props) => {
             })
         }
     }
-
-    console.log('>>>> check dataBook: ', dataBook);
 
     return (
         <div className='view-detail-book'>
