@@ -37,6 +37,9 @@ export const orderSlice = createSlice({
             const bookId = action.payload.bookId;
             state.carts = state.carts.filter(item => item._id !== bookId);
         },
+        doPlaceOrderAction: (state, action) => {
+            state.carts = [];
+        },
         extraReducers: (builder) => {
 
         },
@@ -44,6 +47,6 @@ export const orderSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { doAddToCartAction, doUpdateCartAction, doDeleteItemCartAction } = orderSlice.actions
+export const { doAddToCartAction, doUpdateCartAction, doDeleteItemCartAction, doPlaceOrderAction } = orderSlice.actions
 
 export default orderSlice.reducer

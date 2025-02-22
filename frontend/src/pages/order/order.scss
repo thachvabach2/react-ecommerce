@@ -1,0 +1,11 @@
+.order-steps {
+    max-width       : var(--max-width);
+    font-size       : 0.875rem;
+    margin          : 20px auto 0px auto;
+    background-color: #fff;
+    padding         : 15px 20px;
+}
+
+.result-order {
+    min-height: calc(-183px + 100vh);
+}

@@ -79,11 +79,17 @@ const getBookById = (id) => {
     return axios.get(`/api/v1/book/${id}`);
 }
 
+const postPlaceOrder = (data) => {
+    return axios.post('/api/v1/order', {
+        ...data
+    })
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
     postCreateAUser, postCreateBulkUsers, putUpdateAUser,
     deleteAUser, getListBooksWithPaginate, getBookCategories,
     postUploadImageBook, postCreateABook, putUpdateABook,
-    deleteABook, getBookById,
+    deleteABook, getBookById, postPlaceOrder,
 };
