@@ -3,8 +3,10 @@ import ViewOrder from '../../components/Order/ViewOrder';
 import './order.scss'
 import { useState } from 'react';
 import Payment from '../../components/Order/Payment';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(0);
 
     return (
@@ -40,7 +42,7 @@ const OrderPage = () => {
                     subTitle="Đơn hàng đã được đặt thành công!"
                     className='result-order'
                     extra={[
-                        <Button type="primary" key="console">
+                        <Button type="primary" key="console" onClick={() => navigate('/history')}>
                             Xem lịch sử
                         </Button>,
                     ]}

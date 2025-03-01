@@ -85,6 +85,10 @@ const postPlaceOrder = (data) => {
     })
 }
 
+const getOrderHistory = () => {
+    return axios.get('/api/v1/history')
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
@@ -92,4 +96,5 @@ export {
     deleteAUser, getListBooksWithPaginate, getBookCategories,
     postUploadImageBook, postCreateABook, putUpdateABook,
     deleteABook, getBookById, postPlaceOrder,
+    getOrderHistory,
 };
