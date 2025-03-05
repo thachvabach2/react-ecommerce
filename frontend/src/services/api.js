@@ -108,6 +108,14 @@ const postChangePassword = (email, oldpass, newpass) => {
     return axios.post('/api/v1/user/change-password', { email, oldpass, newpass });
 }
 
+const getDashboard = () => {
+    return axios.get('/api/v1/database/dashboard');
+}
+
+const getListOrder = (query) => {
+    return axios.get(`/api/v1/order?${query}`);
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
@@ -116,5 +124,5 @@ export {
     postUploadImageBook, postCreateABook, putUpdateABook,
     deleteABook, getBookById, postPlaceOrder,
     getOrderHistory, postUploadAvatar, putUpdateUserInfo,
-    postChangePassword,
+    postChangePassword, getDashboard, getListOrder,
 };

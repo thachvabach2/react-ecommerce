@@ -25,6 +25,7 @@ import OrderPage from './pages/order';
 import './styles/reset.scss'
 import './styles/global.scss'
 import HistoryPage from './pages/history';
+import OrderTable from './components/Admin/Order/OrderTable';
 
 const Layout = () => {
     return (
@@ -106,6 +107,13 @@ export default function App() {
                     element:
                         <ProtectedRoute>
                             <BookTable />
+                        </ProtectedRoute>
+                },
+                {
+                    path: "order",
+                    element:
+                        <ProtectedRoute>
+                            <OrderTable />
                         </ProtectedRoute>
                 },
             ],

@@ -42,11 +42,6 @@ const LayoutAdmin = () => {
                     key: 'crud',
                     icon: <FormOutlined />,
                 },
-                {
-                    label: 'Files1',
-                    key: 'file1',
-                    icon: <FileTextOutlined />,
-                }
             ]
         },
         {
@@ -55,7 +50,7 @@ const LayoutAdmin = () => {
             icon: <AuditOutlined />,
         },
         {
-            label: 'Manage Orders',
+            label: <Link to="/admin/order" replace={true}>Manage Orders</Link>,
             key: 'order',
             icon: <DollarOutlined />,
         },

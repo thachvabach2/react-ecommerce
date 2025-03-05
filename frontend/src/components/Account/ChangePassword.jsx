@@ -32,7 +32,7 @@ const ChangePassword = () => {
     }
 
     return (
-        <>
+        <div style={{ minHeight: 400 }}>
             <Form
                 form={form}
                 name="change-password"
@@ -83,7 +83,7 @@ const ChangePassword = () => {
                     </Button>
                 </Form.Item>
             </Form >
-        </>
+        </div>
     )
 }
 

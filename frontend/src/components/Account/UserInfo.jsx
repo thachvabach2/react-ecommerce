@@ -82,14 +82,14 @@ const UserInfo = (props) => {
     }
 
     return (
-        <>
+        <div style={{ minHeight: 400 }}>
             <Form
                 form={form}
                 name="update-info"
                 onFinish={onFinish}
                 autoComplete="off"
                 layout='vertical'
-                style={{ marginBottom: 50 }}
+            // style={{ marginBottom: 50 }}
             >
                 <Row gutter={[20, 20]}>
                     <Col sm={24} md={12}>
@@ -169,7 +169,7 @@ const UserInfo = (props) => {
                     </Col>
                 </Row>
             </Form >
-        </>
+        </div>
     )
 }
 
