@@ -8,7 +8,7 @@ const postRegister = (fullName, email, password, phone) => {
 
 const postLogin = (username, password) => {
     return axios.post('/api/v1/auth/login', {
-        username, password, delay: 2000
+        username, password, delay: 0
     })
 }
 
@@ -89,6 +89,25 @@ const getOrderHistory = () => {
     return axios.get('/api/v1/history')
 }
 
+const postUploadAvatar = (image) => {
+    const formData = new FormData();
+    formData.append('fileImg', image);
+    return axios.post('/api/v1/file/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            "upload-type": "avatar",
+        }
+    })
+}
+
+const putUpdateUserInfo = (_id, avatar, fullName, phone) => {
+    return axios.put('/api/v1/user', { _id, avatar, fullName, phone })
+}
+
+const postChangePassword = (email, oldpass, newpass) => {
+    return axios.post('/api/v1/user/change-password', { email, oldpass, newpass });
+}
+
 export {
     postRegister, postLogin, fetchAccount,
     postLogout, getRefreshToken, getUsersWithPaginate,
@@ -96,5 +115,6 @@ export {
     deleteAUser, getListBooksWithPaginate, getBookCategories,
     postUploadImageBook, postCreateABook, putUpdateABook,
     deleteABook, getBookById, postPlaceOrder,
-    getOrderHistory,
+    getOrderHistory, postUploadAvatar, putUpdateUserInfo,
+    postChangePassword,
 };

@@ -38,6 +38,25 @@ export const accountSlice = createSlice({
                 avatar: '',
                 id: ''
             }
+        },
+        doUpdateInfoAction: (state, action) => {
+            const updatedInfo = action.payload;
+
+            if (updatedInfo.avatar) {
+                state.user = {
+                    ...state.user,
+                    phone: updatedInfo.phone,
+                    fullName: updatedInfo.fullName,
+                    avatar: updatedInfo.avatar,
+                }
+            } else {
+                state.user = {
+                    ...state.user,
+                    phone: updatedInfo.phone,
+                    fullName: updatedInfo.fullName,
+                }
+            }
+
         }
     },
     extraReducers: (builder) => {
@@ -46,6 +65,6 @@ export const accountSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { doLoginAction, doGetAccountAction, doLogoutAction } = accountSlice.actions
+export const { doLoginAction, doGetAccountAction, doLogoutAction, doUpdateInfoAction } = accountSlice.actions
 
 export default accountSlice.reducer

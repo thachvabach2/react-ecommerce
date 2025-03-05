@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { postLogout } from '../../services/api';
 import { doLogoutAction } from '../../redux/account/accountSlice';
+import ManageAccount from '../Account/ManageAccount';
+import { UserOutlined } from '@ant-design/icons';
+
 
 const Header = () => {
     const navigate = useNavigate();
@@ -19,10 +22,15 @@ const Header = () => {
     const carts = useSelector(state => state.order.carts);
 
     const [openDrawer, setOpenDrawer] = useState(false);
+    const [openModalManageUser, setOpenModalManageUser] = useState(false);
 
-    const handleLogout = async (e) => {
+    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
+
+    const [avatarPreview, setAvatarPreview] = useState('');
+
+    const handleLogout = async () => {
         const res = await postLogout();
-        if (e.key === 'logout' && res && res.data) {
+        if (res && res.data) {
             dispatch(doLogoutAction());
             message.success('Đăng xuất thành công')
             navigate('/')
@@ -31,7 +39,7 @@ const Header = () => {
 
     let items = [
         {
-            label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
+            label: <label style={{ cursor: 'pointer' }} onClick={() => { setOpenModalManageUser(true); setAvatarPreview(urlAvatar) }}>Quản lý tài khoản</label>,
             key: 'account',
         },
         {
@@ -39,7 +47,10 @@ const Header = () => {
             key: 'history',
         },
         {
-            label: <label style={{ cursor: 'pointer' }}>Đăng xuất</label>,
+            label: <label
+                onClick={() => handleLogout()}
+                style={{ cursor: 'pointer' }}
+            >Đăng xuất</label>,
             key: 'logout',
         },
     ];
@@ -83,8 +94,6 @@ const Header = () => {
             </>
         )
     }
-
-    const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
     return (
         <>
@@ -145,12 +154,13 @@ const Header = () => {
                                 {isAuthenticated === false ?
                                     <span onClick={() => navigate('/login')}>Đăng nhập</span>
                                     :
-                                    <Dropdown menu={{ items, onClick: (e) => handleLogout(e) }} trigger={['click']}>
+                                    <Dropdown menu={{ items }} trigger={['click']}>
                                         <a onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
                                             <Space>
                                                 <Avatar
                                                     src={urlAvatar}
                                                     alt={'avatar'}
+                                                    icon={<UserOutlined />}
                                                 />
                                                 {user?.fullName}
                                             </Space>
@@ -175,6 +185,13 @@ const Header = () => {
                 <p>Đăng xuất</p>
                 <Divider />
             </Drawer >
+
+            <ManageAccount
+                openModalManageUser={openModalManageUser}
+                setOpenModalManageUser={setOpenModalManageUser}
+                avatarPreview={avatarPreview}
+                setAvatarPreview={setAvatarPreview}
+            />
         </>
     )
 }

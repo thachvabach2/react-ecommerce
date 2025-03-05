@@ -82,6 +82,7 @@ const ViewHistory = () => {
                 dataSource={listOrderHistory}
                 rowKey={'_id'}
                 title={() => 'Lịch sử đặt hàng'}
+                pagination={false}
             />
         </>
     )
