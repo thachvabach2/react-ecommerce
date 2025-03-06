@@ -23,7 +23,6 @@ const LayoutAdmin = () => {
     const navigate = useNavigate();
     const user = useSelector(state => state.account.user);
     const location = useLocation();
-    console.log('>>> check location: ', location.pathname)
 
     const [collapsed, setCollapsed] = useState(false);
 

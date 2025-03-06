@@ -1,4 +1,7 @@
 import axios from '../utils/axios-customize'
+import { Mutex } from 'async-mutex';
+
+const mutex = new Mutex();
 
 const postRegister = (fullName, email, password, phone) => {
     return axios.post('/api/v1/user/register', {
@@ -20,8 +23,14 @@ const postLogout = () => {
     return axios.post('/api/v1/auth/logout');
 }
 
-const getRefreshToken = () => {
-    return axios.get('/api/v1/auth/refresh');
+const getRefreshToken = async () => {
+    return await mutex.runExclusive(async () => {
+        const res = await axios.get('/api/v1/auth/refresh');
+        if (res && res.data)
+            return res;
+        else
+            return null;
+    })
 }
 
 const getUsersWithPaginate = (query) => {
