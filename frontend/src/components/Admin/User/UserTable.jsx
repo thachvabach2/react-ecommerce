@@ -222,6 +222,7 @@ const UserTable = () => {
                 <Col span={24}>
                     <InputSearch
                         setFilter={setFilter}
+                        setCurrent={setCurrent}
                     />
                 </Col>
                 <Col span={24}>

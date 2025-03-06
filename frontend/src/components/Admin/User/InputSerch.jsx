@@ -28,6 +28,7 @@ const InputSearch = (props) => {
 
         if (query) {
             props.setFilter(query);
+            props.setCurrent(1);
         }
     };
 
