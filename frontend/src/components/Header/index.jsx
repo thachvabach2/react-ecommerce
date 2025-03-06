@@ -14,7 +14,9 @@ import ManageAccount from '../Account/ManageAccount';
 import { UserOutlined } from '@ant-design/icons';
 
 
-const Header = () => {
+const Header = (props) => {
+    const { searchTerm, setSearchTerm } = props;
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(state => state.account.isAuthenticated);
@@ -115,9 +117,12 @@ const Header = () => {
                             </span>
 
                             <input
-                                className='input-search' type={'text'}
+                                className='input-search'
+                                type={'text'}
                                 placeholder='Bạn tìm gì hôm nay'
                                 id='input-search' // fix issue
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import {
     AuditOutlined,
@@ -22,14 +22,15 @@ const LayoutAdmin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector(state => state.account.user);
+    const location = useLocation();
+    console.log('>>> check location: ', location.pathname)
 
-    const [activeMenu, setActiveMenu] = useState('dashboard');
     const [collapsed, setCollapsed] = useState(false);
 
     const items = [
         {
             label: <Link to="/admin" >Dashboard</Link>,
-            key: 'dashboard',
+            key: '/admin',
             icon: <MdOutlineDashboard />,
         },
         {
@@ -39,19 +40,19 @@ const LayoutAdmin = () => {
             children: [
                 {
                     label: <Link to="/admin/user" replace={true}>CRUD</Link>,
-                    key: 'crud',
+                    key: '/admin/user',
                     icon: <FormOutlined />,
                 },
             ]
         },
         {
             label: <Link to="/admin/book" replace={true}>Manage Books</Link>,
-            key: 'book',
+            key: '/admin/book',
             icon: <AuditOutlined />,
         },
         {
             label: <Link to="/admin/order" replace={true}>Manage Orders</Link>,
-            key: 'order',
+            key: '/admin/order',
             icon: <DollarOutlined />,
         },
     ]
@@ -118,9 +119,8 @@ const LayoutAdmin = () => {
                 </div>
                 <Menu
                     mode="inline"
-                    defaultSelectedKeys={[activeMenu,]}
+                    selectedKeys={[location.pathname]}
                     items={items}
-                    onClick={(event) => setActiveMenu(event.key)}
                 />
             </Sider>
 

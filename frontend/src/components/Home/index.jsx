@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import { getBookCategories, getListBooksWithPaginate } from '../../services/api';
 import './home.scss'
 import { MAX_PRICE } from '../../utils/constant';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 const Home = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useOutletContext();
 
     const [listCategory, setListCategory] = useState([]);
 
@@ -63,7 +64,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchListBooks();
-    }, [current, pageSize, sortQuery, filterQuery])
+    }, [current, pageSize, sortQuery, filterQuery, searchTerm])
 
     const fetchListBooks = async () => {
         let totalQuery = `current=${current}&pageSize=${pageSize}`;
@@ -75,6 +76,10 @@ const Home = () => {
 
         if (sortQuery) {
             totalQuery += sortQuery;
+        }
+
+        if (searchTerm) {
+            totalQuery += `&mainText=/${searchTerm}/i`;
         }
 
         const res = await getListBooksWithPaginate(totalQuery);
@@ -187,8 +192,6 @@ const Home = () => {
         navigate(`/book/${slug}?id=${book._id}`);
     }
 
-    // console.log('>>> check book: ', listBook)
-
     return (
         <div className='homepage-container'>
             <Row style={{ marginLeft: 0, marginRight: 0 }}>
@@ -220,6 +223,7 @@ const Home = () => {
                                     setFilterQuery('');
                                     // setSortQuery('&sort=-sold')
                                     setCurrent(1)
+                                    setSearchTerm('')
                                 }}
                                 style={{ margin: 'auto 0' }} />
                         </div>
